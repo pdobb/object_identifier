@@ -1,5 +1,7 @@
 # Object Identifier
 
+[![Gem Version](https://badge.fury.io/rb/object_identifier.png)](http://badge.fury.io/rb/object_identifier)
+
 Object Identifier allows quick, easy, and uniform identification of an object
 by inspecting its class name and any desirable attributes/methods. This is great
 for logging, notifications or any other purpose.
