@@ -12,7 +12,7 @@ all over the place in controllers or in rescue blocks in models, etc., you can
 now just use `"#{some_object.identify(:id, :name)}"`.
 
 
-### Compatibility
+## Compatibility
 
 Tested with:
 
@@ -37,8 +37,8 @@ bundle
 
 <b>Defaults</b>
 
-Outputs the <tt>id</tt> attribute by default, if possible and if no other
-attributes are given:
+Outputs the `id` attribute by default, if possible and if no other attributes
+are given:
 
 ```ruby
 some_object.identify  # => Movie[id:1]

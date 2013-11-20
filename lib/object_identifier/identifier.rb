@@ -25,12 +25,7 @@ module ObjectIdentifier
     #   ObjectIdentifier::Identifier.identify(%w(1 2 3), :to_i, :to_f) # => "String[to_i:1, to_f:1.0], String[to_i:2, to_f:2.0], String[to_i:3, to_f:3.0]"
     #   ObjectIdentifier::Identifier.identify((1..10).to_a, :to_f, limit: 2) # => "Fixnum[to_f:1.0], Fixnum[to_f:2.0], ... (8 more)"
     def self.identify(obj, *args)
-      obj = if obj.respond_to?(:to_ary)
-              obj.to_ary
-            else
-              [obj]
-            end
-      new(obj, *args).to_s
+      new(Array.wrap(obj), *args).to_s
     end
 
     def initialize(objects, *args)
