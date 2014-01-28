@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    object_identifier (0.0.2)
+    object_identifier (0.0.3)
       naught
-      rails (~> 4.0.0)
+      rails (>= 3.0.0)
 
 GEM
   remote: https://rubygems.org/
