@@ -16,7 +16,10 @@ now just use `"#{some_object.identify(:id, :name)}"`.
 
 Tested with:
 
+* Ruby: MRI 1.9.3
 * Ruby: MRI 2.0.0
+* Ruby: MRI 2.1.0
+* Rails: 3.2
 * Rails: 4.0.1
 
 ## Installation
