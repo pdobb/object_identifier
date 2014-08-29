@@ -10,7 +10,7 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-gem "byebug"
-gem "pry"
-gem "pry-byebug"
-gem "pry-stack_explorer"
+# gem "byebug"
+# gem "pry"
+# gem "pry-byebug"
+# gem "pry-stack_explorer"
