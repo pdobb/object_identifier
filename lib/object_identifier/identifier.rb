@@ -1,9 +1,5 @@
-require "naught"
-
 module ObjectIdentifier
   class Identifier
-    NullObject = Naught.build
-    include NullObject::Conversions
 
     # Class method for constructing a self-identifying string for any given
     # object or collection of objects.
@@ -87,7 +83,7 @@ module ObjectIdentifier
     end
 
     def number_of_abbreviated_objects
-      @objects.size - Maybe(@options[:limit]).to_i
+      @objects.size - @options[:limit].to_i
     end
 
     def format_with_attributes(object)
