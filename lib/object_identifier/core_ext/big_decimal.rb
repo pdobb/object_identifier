@@ -1,9 +1,12 @@
 class BigDecimal
-  # Formats this BigDecimal to look like a float, which is at least readable.
-  # @return [String] a String representation of this BigDecimal object (via float)
+  # Formats this BigDecimal as an object-type-revealing String.
+  #
+  # @return [String] a String representation of this BigDecimal object
+  #
   # @example
-  #   BigDecimal.new(1).inspect_lit # => "1.0"
+  #   BigDecimal.new(1).inspect_lit         # => "<BD:1.0>"
+  #   BigDecimal.new(99.999, 5).inspect_lit # => "<BD:99.999>"
   def inspect_lit
-    to_s
+    "<BD:#{self}>"
   end
 end

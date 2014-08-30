@@ -2,32 +2,34 @@
 
 [![Gem Version](https://badge.fury.io/rb/object_identifier.png)](http://badge.fury.io/rb/object_identifier)
 
-Object Identifier allows quick, easy, and uniform identification of an object
-by inspecting its class name and any desirable attributes/methods. This is great
-for logging, notifications or any other purpose.
+Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. This is great for quickly logging, sending more descriptive notifications, or any other purpose.
 
-For example, instead of typing out string interpolations such as
-`"#{some_object.class.name}[id:#{some_object.id}, name:'#{some_object.name}']"`
-all over the place in controllers or in rescue blocks in models, etc., you can
-now just use `"#{some_object.identify(:id, :name)}"`.
+For example:
+
+```ruby
+some_object.identify(:id, :name)
+```
+
+Which is the same as:
+
+```ruby
+"#{some_object.class.name}[id:#{some_object.id}, name:'#{some_object.name}']"
+```
 
 
 ## Compatibility
 
-Tested with:
+* Ruby: MRI 1.9.3+
+* Ruby: MRI 2+
+* Rails: 3+
 
-* Ruby: MRI 1.9.3
-* Ruby: MRI 2.0.0
-* Ruby: MRI 2.1.0
-* Rails: 3.2
-* Rails: 4.0.1
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "object_identifier"
+gem 'object_identifier'
 ```
 
 And then execute:
@@ -36,9 +38,10 @@ And then execute:
 bundle
 ```
 
+
 ## Usage
 
-<b>Defaults</b>
+### Defaults
 
 Outputs the `id` attribute by default, if possible and if no other attributes
 are given:
@@ -53,7 +56,7 @@ Also works with methods:
 some_object.identify(:get_rating)  # => Movie[get_rating:"7/10"]
 ```
 
-<b>Unknown Attributes/Methods</b>
+### Unknown Attributes/Methods
 
 If the object doesn't respond to a specified attribute/method it is simply
 ignored:
@@ -62,7 +65,7 @@ ignored:
 some_object.identify(:gobble_gobble, :id)  # => Movie[id:1]
 ```
 
-<b>Collections</b>
+### Collections
 
 Works great with collections:
 
@@ -78,7 +81,7 @@ Also allows limiting of results:
   # => Movie[id:1, name:"Pi"], ... (1 more)
 ```
 
-<b>Overriding the Class Name</b>
+### Overriding the Class Name
 
 ```ruby
 some_object.identify(klass: "MyMovie")       # => MyMovie[id:1]
@@ -86,12 +89,43 @@ some_object.identify(klass: nil)             # => [id:1]
 delayed_job.identify(klass: "Delayed::Job")  # => Delayed::Job[id:1]
 ```
 
-<b>Nils and Empty Collections</b>
+### Nils and Empty Collections
 
 ```ruby
 nil.identify(:id, :name)  # => [no objects]
 [].identify               # => [no objects]
 ```
+
+
+## Custom Object Identifiers
+
+Internally, Object Identifier relies on a method named `inspect_lit` to return a "literally-inspected" string representation of all objects being identified. For example:
+
+```ruby
+:a_symbol.respond_to?(:inspect_lit) # => true
+:a_symbol.inspect_lit               # => ":\"a_symbol\""
+"a_string".inspect_lit              # => "\"a_string\""
+BigDecimal(1.99, 3).inspect_lit     # => "<BD:1.99>"
+```
+
+Therefore, if you'd like to represent a custom object in a special way for object identification, just define the to-string conversion within the `inspect_lit` method.
+
+
+```ruby
+class MyVal
+  def initialize(val)
+    @val = val
+  end
+
+  def inspect_lit
+    "<MOO:#{@val}>"
+  end
+end
+
+OpenStruct.new(my_val: MyVal.new(42)).identify(:my_val)
+# => "OpenStruct[my_val:<MOO:42>]"
+```
+
 
 ## Authors
 

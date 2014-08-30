@@ -1,39 +1,51 @@
 module ObjectIdentifier
   class Identifier
-
-    # Class method for constructing a self-identifying string for any given
-    # object or collection of objects.
-    # @overload self.identify(obj, *args)
-    #   @param obj [Object] the object to identify
-    #   @param args [*] (optional) a list of arguments to identify for this object
-    #     or for each object in this collection
-    # @overload self.identify(obj, *args, options)
-    #   @param obj [Object] the object to identify
-    #   @param args [*] (optional) (default :id) a list of arguments to identify for this object
-    #   @param [Hash] options the options for building a customized self-identifier
-    #   @option options [String, nil] :klass object class name override
-    #   @option options [Fixnum] :limit maximum number of objects to display from a collection
-    # @return [String] a self-identifying string like `Class[id:1, name:'temp']`
-    # @example
-    #   ObjectIdentifier::Identifier.identify(OpenStruct.new(a: 1, b: '2', c: :"3"), :a, :b, :c) # => "OpenStruct[a:1, b:\"2\", c::\"3\"]"
-    #   ObjectIdentifier::Identifier.identify(1, :to_s) # => "Fixnum[to_s:\"1\"]"
-    #   ObjectIdentifier::Identifier.identify(nil) # => "[no objects]"
-    #   ObjectIdentifier::Identifier.identify(%w(1 2 3), :to_i, :to_f) # => "String[to_i:1, to_f:1.0], String[to_i:2, to_f:2.0], String[to_i:3, to_f:3.0]"
-    #   ObjectIdentifier::Identifier.identify((1..10).to_a, :to_f, limit: 2) # => "Fixnum[to_f:1.0], Fixnum[to_f:2.0], ... (8 more)"
-    def self.identify(obj, *args)
-      new(Array.wrap(obj), *args).to_s
-    end
-
     def initialize(objects, *args)
-      @objects    = objects
+      @objects    = Array.wrap(objects)
       @options    = args.extract_options!
       @attributes = args.empty? ? [:id] : args
     end
 
+    # Class method for constructing a self-identifying string for any given
+    # object or collection of objects.
+    #
+    # @overload self.identify(obj, *args)
+    #   @param obj [Object] the object to identify
+    #   @param args [*] (optional) a list of arguments to identify for this
+    #     object or for each object in this collection
+    # @overload self.identify(obj, *args, options)
+    #   @param obj [Object] the object to identify
+    #   @param args [*] (optional) (default :id) a list of arguments to identify
+    #     for this object
+    #   @param [Hash] options the options for building a customized
+    #     self-identifier
+    #   @option options [String, nil] :klass object class name override
+    #   @option options [Fixnum] :limit maximum number of objects to display
+    #     from a collection
+    #
+    # @return [String] a self-identifying string like `Class[id:1, name:'temp']`
+    #
+    # @example
+    #   ObjectIdentifier::Identifier.identify(OpenStruct.new(a: 1, b: '2', c: :"3"), :a, :b, :c)
+    #   # => "OpenStruct[a:1, b:\"2\", c::\"3\"]"
+    #
+    #   ObjectIdentifier::Identifier.identify(1, :to_s) # => "Fixnum[to_s:\"1\"]"
+    #   ObjectIdentifier::Identifier.identify(nil)      # => "[no objects]"
+    #
+    #   ObjectIdentifier::Identifier.identify(%w(1 2 3), :to_i, :to_f)
+    #   # => "String[to_i:1, to_f:1.0], String[to_i:2, to_f:2.0], String[to_i:3, to_f:3.0]"
+    #
+    #   ObjectIdentifier::Identifier.identify((1..10).to_a, :to_f, limit: 2)
+    #   # => "Fixnum[to_f:1.0], Fixnum[to_f:2.0], ... (8 more)"
+    def self.identify(obj, *args)
+      new(obj, *args).to_s
+    end
+
     # Output the self-identifying string for an instance of
-    # ObjectIdentifier::Identifier. Will either return a single object representation
-    # or a list of object representations, based on the number of objects we're
-    # identifying.
+    # ObjectIdentifier::Identifier. Will either return a single object
+    # representation or a list of object representations, based on the number of
+    # objects we're identifying.
+    #
     # @return [String] a string representing the object or list of objects
     def to_s
       if multiple_objects_to_identify?
@@ -47,8 +59,8 @@ module ObjectIdentifier
 
     def format_multiple_objects
       objects = @objects.first(limit).map do |obj|
-        format_with_attributes(obj)
-      end.join(", ")
+                  format_with_attributes(obj)
+                end.join(", ")
 
       if any_objects_abbreviated?
         objects << ", ... (#{number_of_abbreviated_objects} more)"
@@ -67,15 +79,15 @@ module ObjectIdentifier
     end
 
     def multiple_objects_to_identify?
-      @objects.try(:many?)
+      @objects.many?
     end
 
     def limit
-      @options[:limit] || @objects.size
+      @options.fetch(:limit) { @objects.size }.to_i
     end
 
     def limit_given?
-      @options.has_key?(:limit)
+      @options.key?(:limit)
     end
 
     def any_objects_abbreviated?
@@ -98,7 +110,7 @@ module ObjectIdentifier
     end
 
     def format_empty(object)
-      @options.has_key?(:klass) ? "#{@options[:klass]}[]" : "[no objects]"
+      @options.key?(:klass) ? "#{@options[:klass]}[]" : "[no objects]"
     end
 
     def attribute_formatter(hash)
@@ -114,7 +126,7 @@ module ObjectIdentifier
     end
 
     def class_name_of(object)
-      @options.has_key?(:klass) ? @options[:klass] : object.class.name
+      @options.key?(:klass) ? @options[:klass] : object.class.name
     end
   end
 end
