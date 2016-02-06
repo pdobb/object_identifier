@@ -103,7 +103,7 @@ module ObjectIdentifier
         format_empty(object)
       else
         attrs = @attributes.each_with_object({}) do |key, memo|
-          memo[key] = object.send(key) if object.respond_to?(key)
+          memo[key] = object.send(key) if object.respond_to?(key, :include_all)
         end
         "#{class_name_of(object)}[#{attribute_formatter(attrs)}]"
       end
@@ -126,7 +126,7 @@ module ObjectIdentifier
     end
 
     def class_name_of(object)
-      @options.key?(:klass) ? @options[:klass] : object.class.name
+      @options.fetch(:klass) { object.class.name }
     end
   end
 end
