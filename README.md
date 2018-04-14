@@ -1,11 +1,11 @@
 # Object Identifier
 
-[![Gem Version](https://badge.fury.io/rb/object_identifier.png)](http://badge.fury.io/rb/object_identifier)
+[![Gem Version](https://badge.fury.io/rb/object_identifier.svg)](https://badge.fury.io/rb/object_identifier)
 [![Build Status](https://travis-ci.org/pdobb/object_identifier.svg?branch=master)](https://travis-ci.org/pdobb/object_identifier)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/0b737a72d16ec755c1ff/test_coverage)](https://codeclimate.com/github/pdobb/object_identifier/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/0b737a72d16ec755c1ff/maintainability)](https://codeclimate.com/github/pdobb/object_identifier/maintainability)
 
-Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. It is great for quickly logging, sending descriptive notification messages, etc.
+Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. It is great for logging, sending descriptive notification messages, etc.
 
 For example:
 
@@ -16,7 +16,7 @@ some_object.identify(:id, :name)
 Which is the same as:
 
 ```ruby
-"#{some_object.class.name}[id:#{some_object.id}, name:'#{some_object.name}']"
+"#{some_object.class.name}[id:#{some_object.id}, name:\"#{some_object.name}\"]"
 ```
 
 
