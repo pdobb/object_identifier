@@ -1,9 +1,8 @@
 class Object
   # Standard #inspect for any object that doesn't override this method. This
-  # method is meant to make an object's type inherently obvious when used in
-  # logging methods, etc.
+  # method is meant to make an object's type inherently obvious inspected.
   #
-  # @return [String] a string representation of this object
+  # @return [String] a String-literal representation of this object
   def inspect_lit
     inspect
   end
@@ -20,23 +19,23 @@ class Object
   #   @param [Hash] options the options for building a customized
   #     self-identifier
   #   @option options [String, nil] :klass object class name override
-  #   @option options [Fixnum] :limit maximum number of objects to display from
+  #   @option options [Integer] :limit maximum number of objects to display from
   #     a collection
   #
-  # @return [String] a self-identifying string like `Class[id:1, name:'temp']`
+  # @return [String] a self-identifying string
   #
   # @example
   #   OpenStruct.new(a: 1, b: '2', c: :"3").identify(:a, :b, :c)
   #   # => "OpenStruct[a:1, b:\"2\", c::\"3\"]"
   #
-  #   1.identify(:to_s) # => "Fixnum[to_s:\"1\"]"
+  #   1.identify(:to_s) # => "Integer[to_s:\"1\"]"
   #   nil.identify      # => "[no objects]"
   #
   #   %w(1 2 3).identify(:to_i, :to_f)
   #   # => "String[to_i:1, to_f:1.0], String[to_i:2, to_f:2.0], String[to_i:3, to_f:3.0]"
   #
   #   (1..10).to_a.identify(:to_f, limit: 2)
-  #   # => "Fixnum[to_f:1.0], Fixnum[to_f:2.0], ... (8 more)"
+  #   # => "Integer[to_f:1.0], Integer[to_f:2.0], ... (8 more)"
   def identify(*args)
     ObjectIdentifier::Identifier.identify(self, *args)
   end

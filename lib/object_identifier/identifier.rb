@@ -1,10 +1,6 @@
 module ObjectIdentifier
   class Identifier
-    def initialize(objects, *args)
-      @objects    = Array.wrap(objects)
-      @options    = args.extract_options!
-      @attributes = args.empty? ? [:id] : args
-    end
+    NO_OBJECTS_INDICATOR = "[no objects]".freeze
 
     # Class method for constructing a self-identifying string for any given
     # object or collection of objects.
@@ -20,25 +16,33 @@ module ObjectIdentifier
     #   @param [Hash] options the options for building a customized
     #     self-identifier
     #   @option options [String, nil] :klass object class name override
-    #   @option options [Fixnum] :limit maximum number of objects to display
+    #   @option options [Integer] :limit maximum number of objects to display
     #     from a collection
     #
     # @return [String] a self-identifying string like `Class[id:1, name:'temp']`
     #
     # @example
-    #   ObjectIdentifier::Identifier.identify(OpenStruct.new(a: 1, b: '2', c: :"3"), :a, :b, :c)
+    #   ObjectIdentifier::Identifier.identify(
+    #     OpenStruct.new(a: 1, b: '2', c: :"3"), :a, :b, :c)
     #   # => "OpenStruct[a:1, b:\"2\", c::\"3\"]"
     #
-    #   ObjectIdentifier::Identifier.identify(1, :to_s) # => "Fixnum[to_s:\"1\"]"
-    #   ObjectIdentifier::Identifier.identify(nil)      # => "[no objects]"
+    #   ObjectIdentifier::Identifier.identify(1, :to_s)  # => "Integer[to_s:\"1\"]"
+    #   ObjectIdentifier::Identifier.identify(nil)       # => "[no objects]"
     #
-    #   ObjectIdentifier::Identifier.identify(%w(1 2 3), :to_i, :to_f)
-    #   # => "String[to_i:1, to_f:1.0], String[to_i:2, to_f:2.0], String[to_i:3, to_f:3.0]"
+    #   ObjectIdentifier::Identifier.identify(%w(1 2), :to_i, :to_f)
+    #   # => "String[to_i:1, to_f:1.0], String[to_i:2, to_f:2.0]"
     #
     #   ObjectIdentifier::Identifier.identify((1..10).to_a, :to_f, limit: 2)
-    #   # => "Fixnum[to_f:1.0], Fixnum[to_f:2.0], ... (8 more)"
-    def self.identify(obj, *args)
-      new(obj, *args).to_s
+    #   # => "Integer[to_f:1.0], Integer[to_f:2.0], ... (8 more)"
+    def self.identify(object, *args)
+      new(object, *args).to_s
+    end
+
+    def initialize(objects, *args, limit: nil, klass: :not_given)
+      @objects = Array(objects)
+      @attributes = args.empty? ? [:id] : args
+      @limit = (limit || @objects.size).to_i
+      @klass = klass
     end
 
     # Output the self-identifying string for an instance of
@@ -48,85 +52,81 @@ module ObjectIdentifier
     #
     # @return [String] a string representing the object or list of objects
     def to_s
-      if multiple_objects_to_identify?
+      if many?
         format_multiple_objects
       else
         format_single_object
       end
     end
 
-    private
+  private
 
     def format_multiple_objects
-      objects = @objects.first(limit).map do |obj|
-                  format_with_attributes(obj)
-                end.join(", ")
+      objects =
+        @objects.first(@limit).map { |obj| format(obj) }
 
-      if any_objects_abbreviated?
-        objects << ", ... (#{number_of_abbreviated_objects} more)"
+      if truncated?
+        objects << "... (#{truncated_objects_count} more)"
       end
 
-      objects
+      objects.join(", ")
     end
 
     def format_single_object
-      obj = if nil_or_empty_array?(@objects)
-              @objects
-            else
-              @objects.first
-            end
-      format_with_attributes(obj)
+      object = @objects.first if @objects.respond_to?(:first)
+
+      format(object)
     end
 
-    def multiple_objects_to_identify?
-      @objects.many?
+    def format(object)
+      return NO_OBJECTS_INDICATOR if blank?(object)
+
+      "#{class_name(object)}[#{format_attributes(evaluate_attributes(object))}]"
     end
 
-    def limit
-      @options.fetch(:limit) { @objects.size }.to_i
+    def format_attributes(attributes_hash)
+      return if attributes_hash.empty?
+
+      attributes_hash.map { |(key, value)|
+        "#{key}:#{value.inspect_lit}"
+      }.join(", ")
     end
 
-    def limit_given?
-      @options.key?(:limit)
-    end
-
-    def any_objects_abbreviated?
-      limit_given? && number_of_abbreviated_objects > 0
-    end
-
-    def number_of_abbreviated_objects
-      @objects.size - @options[:limit].to_i
-    end
-
-    def format_with_attributes(object)
-      if nil_or_empty_array?(object)
-        format_empty(object)
-      else
-        attrs = @attributes.each_with_object({}) do |key, memo|
-          memo[key] = object.send(key) if object.respond_to?(key, :include_all)
+    # @return [Hash]
+    def evaluate_attributes(object)
+      @attributes.each_with_object({}) { |key, acc|
+        if object.respond_to?(key, :include_private)
+          acc[key] = object.send(key)
         end
-        "#{class_name_of(object)}[#{attribute_formatter(attrs)}]"
-      end
+      }
     end
 
-    def format_empty(object)
-      @options.key?(:klass) ? "#{@options[:klass]}[]" : "[no objects]"
+    def class_name(object)
+      klass_given? ? @klass : object.class.name
     end
 
-    def attribute_formatter(hash)
-      return if hash.empty?
-
-      hash.inject([]) do |memo, (key, value)|
-        memo << "#{key}:#{value.inspect_lit}"
-      end.join(", ")
+    def truncated_objects_count
+      objects_count - @limit
     end
 
-    def nil_or_empty_array?(object)
-      object.nil? || object == []
+    def objects_count
+      @objects_count ||= @objects.size
     end
 
-    def class_name_of(object)
-      @options.fetch(:klass) { object.class.name }
+    def klass_given?
+      @klass != :not_given
+    end
+
+    def blank?(object)
+      object.nil? || object == [] || object == {}
+    end
+
+    def many?
+      objects_count > 1
+    end
+
+    def truncated?
+      truncated_objects_count > 0
     end
   end
 end

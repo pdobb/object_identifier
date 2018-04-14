@@ -1,8 +1,11 @@
 # Object Identifier
 
 [![Gem Version](https://badge.fury.io/rb/object_identifier.png)](http://badge.fury.io/rb/object_identifier)
+[![Build Status](https://travis-ci.org/pdobb/object_identifier.svg?branch=master)](https://travis-ci.org/pdobb/object_identifier)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/0b737a72d16ec755c1ff/test_coverage)](https://codeclimate.com/github/pdobb/object_identifier/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0b737a72d16ec755c1ff/maintainability)](https://codeclimate.com/github/pdobb/object_identifier/maintainability)
 
-Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. This is great for quickly logging, sending more descriptive notifications, or any other purpose.
+Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. It is great for quickly logging, sending descriptive notification messages, etc.
 
 For example:
 
@@ -17,117 +20,148 @@ Which is the same as:
 ```
 
 
-## Compatibility
-
-* Ruby: MRI 1.9.3+
-* Ruby: MRI 2+
-* Rails: 3+
-
-
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'object_identifier'
+gem "object_identifier"
 ```
 
 And then execute:
 
-```ruby
-bundle
-```
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install object_identifier
+
+
+## Compatibility
+
+Tested MRI Ruby Versions:
+* 2.2.10
+* 2.3.7
+* 2.4.4
+* 2.5.1
+* edge
 
 
 ## Usage
 
 ### Defaults
 
-Outputs the `id` attribute by default, if possible and if no other attributes
-are given:
+`identify` outputs the `id` of the receiving object by default, if it exists and no other attributes/methods are specified.
 
 ```ruby
-some_object.identify  # => Movie[id:1]
+my_movie.identify           # => Movie[id:1]
+my_movie.identify(:rating)  # => Movie[rating:"7/10"]
 ```
 
-Also works with methods:
+Private methods can be identified just the same as public methods.
 
 ```ruby
-some_object.identify(:get_rating)  # => Movie[get_rating:"7/10"]
+my_movie.identify(:my_private_method)  # => Movie[my_private_method:"Shh"]
 ```
+
 
 ### Unknown Attributes/Methods
 
-If the object doesn't respond to a specified attribute/method it is simply
-ignored:
+If the object doesn't respond to a specified attribute/method it is simply ignored:
 
 ```ruby
-some_object.identify(:gobble_gobble, :id)  # => Movie[id:1]
+my_movie.identify(:gobble_gobble, :rating)  # => Movie[rating:"7/10"]
 ```
+
+### Overriding Class Names
+
+```ruby
+my_delayed_job.identify(klass: "Delayed::Job")  # => Delayed::Job[id:1]
+my_movie.identify(klass: nil)                   # => [id:1]
+```
+
+
+### Identifying Nil
+
+```ruby
+nil.identify(:id, :name)                 # => [no objects]
+nil.identify(:id, :name, klass: "Nope")  # => [no objects]
+```
+
 
 ### Collections
 
-Works great with collections:
+Collections of objects are each identified in turn.
 
 ```ruby
-[some_object, some_other_object].identify(:id, :name)
-  # => Movie[id:1, name:"Pi"], Contact[id:23, name:"Bob"]
+[my_movie, my_user].identify(:id, :name)
+# => Movie[id:1, name:"Pi"], User[id:1, name:"Bob"]
 ```
 
-Also allows limiting of results:
+The number of results that will be identified from a collection can be truncated by specifying the `limit` option.
 
 ```ruby
-[some_object, some_other_object].identify(:id, :name, limit: 1)
-  # => Movie[id:1, name:"Pi"], ... (1 more)
+[my_movie, my_contact].identify(:id, :name, limit: 1)
+# => Movie[id:1, name:"Pi"], ... (1 more)
 ```
 
-### Overriding the Class Name
+
+### Empty Collections
 
 ```ruby
-some_object.identify(klass: "MyMovie")       # => MyMovie[id:1]
-some_object.identify(klass: nil)             # => [id:1]
-delayed_job.identify(klass: "Delayed::Job")  # => Delayed::Job[id:1]
-```
-
-### Nils and Empty Collections
-
-```ruby
-nil.identify(:id, :name)  # => [no objects]
-[].identify               # => [no objects]
+[].identify  # => [no objects]
+{}.identify  # => [no objects]
 ```
 
 
 ## Custom Object Identifiers
 
-Internally, Object Identifier relies on a method named `inspect_lit` to return a "literally-inspected" string representation of all objects being identified. For example:
+Internally, Object Identifier calls `inspect_lit` to return a "literally-inspected" string representation of an object. This works because Object, itself, is monkey-patched to define `inspect_lit` which just returns `inspect`. This is sufficient for most objects, but some objects will benefit from defining special output from `inspect_lit`.
+
+Object Identifier defines `inspect_lit` on three other core objects: String, Symbol, and BigDecimal.
 
 ```ruby
-:a_symbol.respond_to?(:inspect_lit) # => true
-:a_symbol.inspect_lit               # => ":\"a_symbol\""
-"a_string".inspect_lit              # => "\"a_string\""
-BigDecimal(1.99, 3).inspect_lit     # => "<BD:1.99>"
+"a_string".inspect_lit           # => "\"a_string\""
+:a_symbol.inspect_lit            # => ":\"a_symbol\""
+BigDecimal(1.99, 3).inspect_lit  # => "<BD:1.99>"
 ```
 
-Therefore, if you'd like to represent a custom object in a special way for object identification, just define the to-string conversion within the `inspect_lit` method.
-
+To identify an object in a special way, just define `inspect_lit` to return a custom String.
 
 ```ruby
-class MyVal
+class MyValueObject
   def initialize(val)
     @val = val
   end
 
   def inspect_lit
-    "<MOO:#{@val}>"
+    "#{@val} Meters"
   end
 end
 
-OpenStruct.new(my_val: MyVal.new(42)).identify(:my_val)
-# => "OpenStruct[my_val:<MOO:42>]"
+my_value_object = MyValueObject.new(42)
+OpenStruct.new(my_value: my_value_object).identify(:my_value)
+# => "OpenStruct[my_value:42 Meters]"
 ```
 
 
-## Authors
+## Supporting Gems
 
-- Paul Dobbins
-- Evan Sherwood
+ObjectIdentifier works great with the [ObjectInspector](https://github.com/pdobb/object_inspector) gem.
+
+
+## Development
+
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/pdobb/object_identifier.
+
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

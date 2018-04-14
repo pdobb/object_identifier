@@ -5,8 +5,8 @@ class Symbol
   # @return [String] a symbol literal representation of this object
   #
   # @example
-  #   :test.inspect_lit     # => ":\"test\"" (or ':"test"')
-  #   :"ta-da!".inspect_lit # => ":\"ta-da!\"" (or ':"ta-da!"')
+  #   :test.inspect_lit      # => ":\"test\"" (or ':"test"')
+  #   :"ta-da!".inspect_lit  # => ":\"ta-da!\"" (or ':"ta-da!"')
   def inspect_lit
     %(:"#{to_s}")
   end

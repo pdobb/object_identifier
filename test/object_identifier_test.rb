@@ -1,69 +1,115 @@
 require "test_helper"
 
-describe ObjectIdentifier::Identifier do
-  describe "#identify" do
-    it "yields 'Class[id:1]', GIVEN id and no attributes" do
-      OpenStruct.new(id: 1).identify.must_equal "OpenStruct[id:1]"
-    end
+class ObjectIdentifier::IdentifierTest < Minitest::Spec
+  describe ObjectIdentifier::Identifier do
+    describe "#identify" do
+      context "GIVEN a single object" do
+        it "returns attribute values" do
+          subject = OpenStruct.new(name: "Pepper", beak_size: 4)
+          subject.identify(:beak_size).must_equal "OpenStruct[beak_size:4]"
+        end
 
-    it "lists each entry in collection" do
-      collection = [OpenStruct.new(id: 1), OpenStruct.new(id: 2)]
-      collection.identify.must_equal "OpenStruct[id:1], OpenStruct[id:2]"
-    end
+        it "quotes strings in attributes" do
+          subject = OpenStruct.new(name: "Pepper")
+          subject.identify(:name).must_equal %(OpenStruct[name:"Pepper"])
+        end
 
-    describe "no attributes, no id, empty array, nil" do
-      it "yields 'Class[]', GIVEN no id or attributes" do
-        Object.new.identify.must_equal "Object[]"
+        it "quotes symbols in attributes" do
+          subject = OpenStruct.new(name: "Pepper", color: :grey)
+          subject.identify(:color).must_equal %(OpenStruct[color::"grey"])
+        end
+
+        it "ignores attributes that don't exist" do
+          subject = OpenStruct.new(name: "Pepper", color: :grey, beak_size: 4)
+          subject.identify(:volume, :beak_size).
+            must_equal "OpenStruct[beak_size:4]"
+        end
+
+        it "returns '[no objects]', GIVEN nil" do
+          subject = nil
+          subject.identify.must_equal "[no objects]"
+        end
+
+        context "GIVEN object responds to :id" do
+          subject { OpenStruct.new(id: 1) }
+
+          it "returns 'Class[id:1]', GIVEN no other attributes" do
+            subject.identify.must_equal "OpenStruct[id:1]"
+          end
+        end
+
+        context "GIVEN object does not respond to :id" do
+          subject { Object.new }
+
+          it "returns '<ClassName>[]', GIVEN no attributes" do
+            subject.identify.must_equal "Object[]"
+          end
+        end
+
+        context "GIVEN a :klass" do
+          subject { OpenStruct.new(id: 1) }
+
+          it "overrides object class name" do
+            subject.identify(klass: "Bird").must_equal "Bird[id:1]"
+          end
+
+          it "returns no class, GIVEN :klass is nil" do
+            subject.identify(klass: nil).must_equal "[id:1]"
+          end
+
+          it "returns no class, GIVEN :klass is empty string" do
+            subject.identify(klass: "").must_equal "[id:1]"
+          end
+        end
+
+        context "GIVEN a :limit" do
+          subject { OpenStruct.new(id: 1) }
+
+          it "ignores :limit" do
+            subject.identify(:id, limit: 3).must_equal "OpenStruct[id:1]"
+          end
+        end
       end
 
-      it "yields '[no objects]', GIVEN an empty array" do
-        [].identify.must_equal "[no objects]"
-      end
+      context "GIVEN a collection of objects" do
+        it "identifies each object in turn" do
+          subject = [OpenStruct.new(id: 1), OpenStruct.new(id: 2)]
+          subject.identify.must_equal "OpenStruct[id:1], OpenStruct[id:2]"
+        end
 
-      it "yields '[no objects]', GIVEN nil" do
-        nil.identify.must_equal "[no objects]"
-      end
-    end
+        it "returns '[no objects]', GIVEN an empty Array" do
+          subject = []
+          subject.identify.must_equal "[no objects]"
+        end
 
-    describe "with attributes" do
-      it "yields attribute values" do
-        obj = OpenStruct.new(name: "Pepper", beak_size: 4)
-        obj.identify(:beak_size).must_equal "OpenStruct[beak_size:4]"
-      end
+        it "returns '[no objects]', GIVEN an empty Hash" do
+          subject = {}
+          subject.identify.must_equal "[no objects]"
+        end
 
-      it "quotes strings" do
-        obj = OpenStruct.new(name: "Pepper")
-        obj.identify(:name).must_equal %(OpenStruct[name:"Pepper"])
-      end
+        context "GIVEN a :klass" do
+          subject { [OpenStruct.new(id: 1), Object.new] }
 
-      it "quotes symbols" do
-        obj = OpenStruct.new(name: "Pepper", color: :grey)
-        obj.identify(:color).must_equal %(OpenStruct[color::"grey"])
-      end
+          it "overrides object class name for all objects" do
+            subject.identify(klass: "Bird").must_equal "Bird[id:1], Bird[]"
+          end
 
-      it "ignores attributes that don't exist" do
-        obj = OpenStruct.new(name: "Pepper", color: :grey, beak_size: 4)
-        obj.identify(:volume, :beak_size).must_equal "OpenStruct[beak_size:4]"
-      end
-    end
+          it "returns no class, GIVEN :klass is nil" do
+            subject.identify(klass: nil).must_equal "[id:1], []"
+          end
 
-    describe "options" do
-      it "overrides object class name with :klass" do
-        OpenStruct.new(id: 1).identify(klass: "Monkey").must_equal "Monkey[id:1]"
-      end
+          it "returns no class, GIVEN :klass is empty string" do
+            subject.identify(klass: "").must_equal "[id:1], []"
+          end
+        end
 
-      it "yields no class, GIVEN class is empty string" do
-        OpenStruct.new(id: 1).identify(klass: "").must_equal "[id:1]"
-        OpenStruct.new(id: 1).identify(klass: nil).must_equal "[id:1]"
-      end
-
-      it "overrides object class name with :klass with no attributes" do
-        [].identify(klass: "Monkey").must_equal "Monkey[]"
-      end
-
-      it "yields first n (:limit) objects in collection" do
-        (1..7).to_a.identify(:to_i, limit: 3).must_equal(
-          "Fixnum[to_i:1], Fixnum[to_i:2], Fixnum[to_i:3], ... (4 more)")
+        context "GIVEN a :limit" do
+          it "returns truncated list, GIVEN :limit" do
+            subject = "abcdefg".chars
+            subject.identify(:upcase, limit: 3).must_equal(
+              "String[upcase:\"A\"], String[upcase:\"B\"], String[upcase:\"C\"], ... (4 more)")
+          end
+        end
       end
     end
   end
