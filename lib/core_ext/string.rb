@@ -1,3 +1,4 @@
+# Reopen the core String class to represent {#inspect_lit}.
 class String
   # Formats self to look like a String literal so that object type will be
   # inherently obvious when inspected.
@@ -9,6 +10,6 @@ class String
   #   "1".inspect_lit     # => "\"1\""    (i.e. '"1"')
   #   "12.3".inspect_lit  # => "\"12.3\"" (i.e. '"12.3"')
   def inspect_lit
-    %("#{to_s}")
+    %("#{self}")
   end
 end

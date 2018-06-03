@@ -1,4 +1,5 @@
 module ObjectIdentifier
+  # ObjectIdentifier::Identifier manages construction of the inspect String.
   class Identifier
     NO_OBJECTS_INDICATOR = "[no objects]".freeze
 
@@ -26,8 +27,10 @@ module ObjectIdentifier
     #     OpenStruct.new(a: 1, b: '2', c: :"3"), :a, :b, :c)
     #   # => "OpenStruct[a:1, b:\"2\", c::\"3\"]"
     #
-    #   ObjectIdentifier::Identifier.identify(1, :to_s)  # => "Integer[to_s:\"1\"]"
-    #   ObjectIdentifier::Identifier.identify(nil)       # => "[no objects]"
+    #   ObjectIdentifier::Identifier.identify(1, :to_s)
+    #   # => "Integer[to_s:\"1\"]"
+    #   ObjectIdentifier::Identifier.identify(nil)
+    #   # => "[no objects]"
     #
     #   ObjectIdentifier::Identifier.identify(%w(1 2), :to_i, :to_f)
     #   # => "String[to_i:1, to_f:1.0], String[to_i:2, to_f:2.0]"
@@ -59,15 +62,13 @@ module ObjectIdentifier
       end
     end
 
-  private
+    private
 
     def format_multiple_objects
       objects =
         @objects.first(@limit).map { |obj| format(obj) }
 
-      if truncated?
-        objects << "... (#{truncated_objects_count} more)"
-      end
+      objects << "... (#{truncated_objects_count} more)" if truncated?
 
       objects.join(", ")
     end
@@ -95,9 +96,7 @@ module ObjectIdentifier
     # @return [Hash]
     def evaluate_attributes(object)
       @attributes.each_with_object({}) { |key, acc|
-        if object.respond_to?(key, :include_private)
-          acc[key] = object.send(key)
-        end
+        acc[key] = object.send(key) if object.respond_to?(key, :include_private)
       }
     end
 

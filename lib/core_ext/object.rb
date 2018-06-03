@@ -1,3 +1,4 @@
+# Reopen the core Object class to add {#identify} to all objects.
 class Object
   # Standard #inspect for any object that doesn't override this method. This
   # method is meant to make an object's type inherently obvious inspected.
@@ -31,8 +32,8 @@ class Object
   #   1.identify(:to_s) # => "Integer[to_s:\"1\"]"
   #   nil.identify      # => "[no objects]"
   #
-  #   %w(1 2 3).identify(:to_i, :to_f)
-  #   # => "String[to_i:1, to_f:1.0], String[to_i:2, to_f:2.0], String[to_i:3, to_f:3.0]"
+  #   %w(1 2).identify(:to_i, :to_f)
+  #   # => "String[to_i:1, to_f:1.0], String[to_i:2, to_f:2.0]"
   #
   #   (1..10).to_a.identify(:to_f, limit: 2)
   #   # => "Integer[to_f:1.0], Integer[to_f:2.0], ... (8 more)"

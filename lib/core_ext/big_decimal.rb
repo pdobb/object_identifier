@@ -1,5 +1,6 @@
 require "bigdecimal"
 
+# Reopen the core BigDecimal class to represent {#inspect_lit}.
 class BigDecimal
   # Formats this BigDecimal as an object-type-revealing String.
   #
