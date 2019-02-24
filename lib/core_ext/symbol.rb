@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Reopen the core Symbol class to represent {#inspect_lit}.
 class Symbol
   # Formats this symbol to look like a symbol literal so that object type will

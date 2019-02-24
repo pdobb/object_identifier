@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ObjectIdentifier is the base namespace for all modules/classes related to the
 # object_identifier gem.
 module ObjectIdentifier

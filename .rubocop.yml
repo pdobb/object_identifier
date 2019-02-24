@@ -1,4 +1,9 @@
-# AllCops:
+AllCops:
+  UseCache: true
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  ExtraDetails: false
+  TargetRubyVersion: 2.5.3
 
 Layout/DotPosition:
   EnforcedStyle: trailing

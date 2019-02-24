@@ -1,3 +1,7 @@
+### 0.2.1 - 2019-02-24
+
+- Add ability to identify instance vars
+
 ### 0.1.0 - 2018-04-14
 
 - Revamp gem.

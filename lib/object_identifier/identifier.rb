@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module ObjectIdentifier
   # ObjectIdentifier::Identifier manages construction of the inspect String.
   class Identifier
-    NO_OBJECTS_INDICATOR = "[no objects]".freeze
+    NO_OBJECTS_INDICATOR = "[no objects]"
 
     # Class method for constructing a self-identifying string for any given
     # object or collection of objects.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Reopen the core Object class to add {#identify} to all objects.
 class Object
   # Standard #inspect for any object that doesn't override this method. This

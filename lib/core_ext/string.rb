@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Reopen the core String class to represent {#inspect_lit}.
 class String
   # Formats self to look like a String literal so that object type will be

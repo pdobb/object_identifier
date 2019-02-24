@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "bigdecimal"
 
 # Reopen the core BigDecimal class to represent {#inspect_lit}.
