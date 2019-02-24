@@ -26,6 +26,12 @@ module ObjectIdentifier
               must_equal "OpenStruct[beak_size:4]"
           end
 
+          it "returns the value of instance variables" do
+            subject = OpenStruct.new
+            subject.instance_variable_set(:@var1, 1)
+            subject.identify(:@var1).must_equal "OpenStruct[@var1:1]"
+          end
+
           it "returns '[no objects]', GIVEN nil" do
             subject = nil
             subject.identify.must_equal "[no objects]"

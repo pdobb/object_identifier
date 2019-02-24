@@ -96,7 +96,11 @@ module ObjectIdentifier
     # @return [Hash]
     def evaluate_attributes(object)
       @attributes.each_with_object({}) { |key, acc|
-        acc[key] = object.send(key) if object.respond_to?(key, :include_private)
+        if object.respond_to?(key, :include_private)
+          acc[key] = object.send(key)
+        elsif key.to_s.start_with?("@")
+          acc[key] = object.instance_variable_get(key)
+        end
       }
     end
 
