@@ -11,14 +11,17 @@ Layout/DotPosition:
 Layout/EndOfLine:
   EnforcedStyle: lf
 
-Layout/FirstParameterIndentation:
+Layout/IndentFirstArgument:
   EnforcedStyle: consistent_relative_to_receiver
 
-Layout/IndentArray:
+Layout/IndentFirstArrayElement:
   EnforcedStyle: consistent
 
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   EnforcedStyle: consistent
+
+Layout/IndentFirstParameter:
+  Enabled: false # Revisit if more settings become available.
 
 Layout/MultilineMethodCallBraceLayout:
   EnforcedStyle: same_line
@@ -37,9 +40,6 @@ Lint/AmbiguousOperator:
 
 Lint/AmbiguousRegexpLiteral:
   Enabled: false # Conflicts with other rules.
-
-Lint/SplatKeywordArguments:
-  Enabled: false # Removed from Rubocop; Remove this after upgrade.
 
 Lint/Void:
   CheckForMethodsWithNoSideEffects: true
