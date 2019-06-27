@@ -12,7 +12,7 @@ module ObjectIdentifier
             subject.identify(:beak_size).must_equal "OpenStruct[beak_size:4]"
           end
 
-          it "quotes strings in attributes" do
+          it "quotes Strings in attributes" do
             subject = OpenStruct.new(name: "Pepper")
             subject.identify(:name).must_equal %(OpenStruct[name:"Pepper"])
           end
@@ -66,7 +66,7 @@ module ObjectIdentifier
               subject.identify(klass: nil).must_equal "[id:1]"
             end
 
-            it "returns no class, GIVEN :klass is empty string" do
+            it "returns no class, GIVEN :klass is empty String" do
               subject.identify(klass: "").must_equal "[id:1]"
             end
           end
@@ -107,7 +107,7 @@ module ObjectIdentifier
               subject.identify(klass: nil).must_equal "[id:1], []"
             end
 
-            it "returns no class, GIVEN :klass is empty string" do
+            it "returns no class, GIVEN :klass is empty String" do
               subject.identify(klass: "").must_equal "[id:1], []"
             end
           end
@@ -121,6 +121,17 @@ module ObjectIdentifier
                 "String[upcase:\"C\"], ... (4 more)")
             end
           end
+        end
+
+        context "GIVEN a Struct (special case)" do
+          subject { TestStruct.new(1) }
+
+          it "returns the expected String" do
+            value(subject.identify).must_equal(
+              "ObjectIdentifier::IdentifierTest::TestStruct[id:1]")
+          end
+
+          TestStruct = Struct.new(:id)
         end
       end
     end

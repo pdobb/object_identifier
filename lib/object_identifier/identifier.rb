@@ -44,7 +44,7 @@ module ObjectIdentifier
     end
 
     def initialize(objects, *args, limit: nil, klass: :not_given)
-      @objects = Array(objects)
+      @objects = ArrayWrap.call(objects)
       @attributes = args.empty? ? [:id] : args
       @limit = (limit || @objects.size).to_i
       @klass = klass
@@ -131,7 +131,23 @@ module ObjectIdentifier
     end
 
     def truncated?
-      truncated_objects_count > 0
+      truncated_objects_count.positive?
+    end
+
+    # ObjectIdentifier::Identifier::ArrayWrap mirrors the implementation of
+    # Rails' {Array.wrap} method. This allows us to get around objects that
+    # respond to `to_a` (such as Struct) and, instead, utilize either `to_ary`
+    # or just actually wrapping the object in an Array.
+    class ArrayWrap
+      def self.call(object)
+        if object.nil?
+          []
+        elsif object.respond_to?(:to_ary)
+          object.to_ary || [object]
+        else
+          [object]
+        end
+      end
     end
   end
 end
