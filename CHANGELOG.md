@@ -1,4 +1,4 @@
-### Unreleased
+### 0.3.0 - 2019-06-27
 - Fix identification of objects that implement `to_a`, such as Struct.
 
 ### 0.2.1 - 2019-02-24
