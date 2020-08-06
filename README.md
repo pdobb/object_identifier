@@ -54,32 +54,37 @@ Tested MRI Ruby Versions:
 `identify` outputs the `id` of the receiving object by default, if it exists and no other attributes/methods are specified.
 
 ```ruby
-my_movie.identify           # => Movie[id:1]
-my_movie.identify(:rating)  # => Movie[rating:"7/10"]
+my_movie.identify                # => Movie[1]
+```
+
+`identify` doesn't output labels if only identifying a single attribute/method. It includes labels when two or more attributes/methods are being identified.
+
+```ruby
+my_movie.identify(:id)           # => Movie[1]
+my_movie.identify(:rating)       # => Movie["7/10"]
+my_movie.identify(:id, :rating)  # => Movie[id:1, rating:"7/10"]
 ```
 
 Private methods can be identified just the same as public methods.
 
 ```ruby
-my_movie.identify(:my_private_method)  # => Movie[my_private_method:"Shh"]
+my_movie.identify(:my_private_method)  # => Movie["Shh"]
 ```
-
 
 ### Unknown Attributes/Methods
 
 If the object doesn't respond to a specified attribute/method it is simply ignored:
 
 ```ruby
-my_movie.identify(:gobble_gobble, :rating)  # => Movie[rating:"7/10"]
+my_movie.identify(:id, :rating, :other)  # => Movie[id:1, rating:"7/10"]
 ```
 
 ### Overriding Class Names
 
 ```ruby
-my_delayed_job.identify(klass: "Delayed::Job")  # => Delayed::Job[id:1]
-my_movie.identify(klass: nil)                   # => [id:1]
+my_delayed_job.identify(klass: "Delayed::Job")  # => Delayed::Job[1]
+my_movie.identify(klass: nil)                   # => [1]
 ```
-
 
 ### Identifying Nil
 
@@ -87,7 +92,6 @@ my_movie.identify(klass: nil)                   # => [id:1]
 nil.identify(:id, :name)                 # => [no objects]
 nil.identify(:id, :name, klass: "Nope")  # => [no objects]
 ```
-
 
 ### Collections
 
@@ -101,7 +105,7 @@ Collections of objects are each identified in turn.
 The number of results that will be identified from a collection can be truncated by specifying the `limit` option.
 
 ```ruby
-[my_movie, my_contact].identify(:id, :name, limit: 1)
+[my_movie, my_user].identify(:id, :name, limit: 1)
 # => Movie[id:1, name:"Pi"], ... (1 more)
 ```
 
