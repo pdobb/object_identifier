@@ -1,3 +1,6 @@
+### ????? - ??????????
+- Only show attribute names if identifying more than one attribute #4
+
 ### 0.3.0 - 2019-06-27
 - Fix identification of objects that implement `to_a`, such as Struct.
 

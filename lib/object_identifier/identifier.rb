@@ -90,9 +90,17 @@ module ObjectIdentifier
     def format_attributes(attributes_hash)
       return if attributes_hash.empty?
 
-      attributes_hash.map { |(key, value)|
-        "#{key}:#{value.inspect_lit}"
-      }.join(", ")
+      attributes_hash.
+        map(&format_attributes_map_block(attributes_hash)).
+        join(", ")
+    end
+
+    def format_attributes_map_block(attributes_hash)
+      if attributes_hash.one?
+        ->(key, value) { value.inspect_lit }
+      else
+        ->(key, value) { "#{key}:#{value.inspect_lit}" }
+      end
     end
 
     # @return [Hash]
