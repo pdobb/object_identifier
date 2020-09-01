@@ -97,7 +97,7 @@ module ObjectIdentifier
 
     def format_attributes_map_block(attributes_hash)
       if attributes_hash.one?
-        ->(key, value) { value.inspect_lit }
+        ->(_key, value) { value.inspect_lit }
       else
         ->(key, value) { "#{key}:#{value.inspect_lit}" }
       end

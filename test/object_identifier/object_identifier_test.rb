@@ -7,7 +7,7 @@ class ObjectIdentifierTest < Minitest::Spec
     let(:klazz) { ObjectIdentifier }
 
     it "has a VERSION" do
-      klazz::VERSION.wont_be_nil
+      value(klazz::VERSION).wont_be_nil
     end
   end
 end

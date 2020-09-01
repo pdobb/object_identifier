@@ -3,7 +3,8 @@ AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
   ExtraDetails: false
-  TargetRubyVersion: 2.5.3
+  TargetRubyVersion: 2.4.0
+  NewCops: enable
 
 Layout/DotPosition:
   EnforcedStyle: trailing
@@ -11,16 +12,16 @@ Layout/DotPosition:
 Layout/EndOfLine:
   EnforcedStyle: lf
 
-Layout/IndentFirstArgument:
+Layout/FirstArgumentIndentation:
   EnforcedStyle: consistent_relative_to_receiver
 
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
 
-Layout/IndentFirstParameter:
+Layout/FirstParameterIndentation:
   Enabled: false # Revisit if more settings become available.
 
 Layout/MultilineMethodCallBraceLayout:
@@ -59,7 +60,7 @@ Metrics/LineLength:
   Exclude:
     - "object_identifier.gemspec"
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   AllowedNames:
     - a
     - b
