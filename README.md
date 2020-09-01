@@ -40,11 +40,9 @@ Or install it yourself as:
 ## Compatibility
 
 Tested MRI Ruby Versions:
-* 2.2.10
-* 2.3.7
-* 2.4.4
-* 2.5.1
-* edge
+* 2.4.9
+* 2.5.8
+* 2.6.6
 
 
 ## Usage
