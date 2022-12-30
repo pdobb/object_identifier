@@ -40,6 +40,7 @@ Or install it yourself as:
 ## Compatibility
 
 Tested MRI Ruby Versions:
+* 3.2.0
 * 2.4.9
 * 2.5.8
 * 2.6.6

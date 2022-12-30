@@ -7,8 +7,8 @@ require "object_identifier/version"
 Gem::Specification.new do |spec|
   spec.name          = "object_identifier"
   spec.version       = ObjectIdentifier::VERSION
-  spec.authors       = ["Paul Dobbins", "Evan Sherwood"]
-  spec.email         = ["paul.dobbins@icloud.com"]
+  spec.authors       = ["Paul DobbinSchmaltz", "Evan Sherwood"]
+  spec.email         = ["p.dobbinschmaltz@icloud.com"]
   spec.required_ruby_version = ">= 2.4.0"
 
   spec.summary       = "ObjectIdentifier identifies an object by its class name and attributes."

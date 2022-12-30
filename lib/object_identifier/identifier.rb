@@ -39,8 +39,8 @@ module ObjectIdentifier
     #
     #   ObjectIdentifier::Identifier.identify((1..10).to_a, :to_f, limit: 2)
     #   # => "Integer[to_f:1.0], Integer[to_f:2.0], ... (8 more)"
-    def self.identify(object, *args)
-      new(object, *args).to_s
+    def self.identify(*args, **kargs)
+      new(*args, **kargs).to_s
     end
 
     def initialize(objects, *args, limit: nil, klass: :not_given)
