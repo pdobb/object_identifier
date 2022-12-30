@@ -1,4 +1,4 @@
-### 0.4.1 - 2022-12-?
+### 0.4.1 - 2022-12-30
 - Make compatible with Ruby 3.2 (and likely Ruby 3.0 and 3.1 as well).
 - Update development dependencies.
 
