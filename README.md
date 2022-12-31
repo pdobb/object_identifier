@@ -1,7 +1,6 @@
 # Object Identifier
 
 [![Gem Version](https://badge.fury.io/rb/object_identifier.svg)](https://badge.fury.io/rb/object_identifier)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/0b737a72d16ec755c1ff/test_coverage)](https://codeclimate.com/github/pdobb/object_identifier/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/0b737a72d16ec755c1ff/maintainability)](https://codeclimate.com/github/pdobb/object_identifier/maintainability)
 
 Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. It is great for logging, sending descriptive notification messages, etc.
