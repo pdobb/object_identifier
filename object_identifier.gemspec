@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Paul DobbinSchmaltz", "Evan Sherwood"]
   spec.email         = ["p.dobbinschmaltz@icloud.com"]
   spec.required_ruby_version = ">= 2.4.0"
+  spec.metadata      = { "rubygems_mfa_required" => "true" }
 
   spec.summary       = "ObjectIdentifier identifies an object by its class name and attributes."
   spec.description   = "Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. It is great for logging, sending descriptive notification messages, etc."

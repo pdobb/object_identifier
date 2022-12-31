@@ -150,7 +150,7 @@ module ObjectIdentifier
               "ObjectIdentifier::IdentifierTest::TestStruct[1]")
           end
 
-          TestStruct = Struct.new(:id)
+          TestStruct = Struct.new(:id) # rubocop:disable Lint/ConstantDefinitionInBlock
         end
       end
     end

@@ -24,6 +24,17 @@ Layout/FirstHashElementIndentation:
 Layout/FirstParameterIndentation:
   Enabled: false # Revisit if more settings become available.
 
+Layout/LineContinuationSpacing:
+  EnforcedStyle: no_space
+
+Layout/LineEndStringConcatenationIndentation:
+  EnforcedStyle: aligned
+
+Layout/LineLength:
+  Max: 80
+  Exclude:
+    - "object_identifier.gemspec"
+
 Layout/MultilineMethodCallBraceLayout:
   EnforcedStyle: same_line
 
@@ -46,7 +57,7 @@ Lint/Void:
   CheckForMethodsWithNoSideEffects: true
 
 Metrics/BlockLength:
-  ExcludedMethods:
+  AllowedMethods:
     - describe
     - context
     - ips # Benchmarking
@@ -54,11 +65,6 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Exclude:
     - "test/**/*"
-
-Metrics/LineLength:
-  Max: 80
-  Exclude:
-    - "object_identifier.gemspec"
 
 Naming/MethodParameterName:
   AllowedNames:
@@ -87,6 +93,10 @@ Style/FormatString:
 
 Style/Lambda:
   EnforcedStyle: literal
+
+Style/OpenStructUse:
+  Exclude:
+    - "test/**/*"
 
 Style/RegexpLiteral:
   EnforcedStyle: mixed
