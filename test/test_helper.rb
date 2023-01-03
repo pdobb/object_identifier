@@ -14,6 +14,8 @@ require "minitest/autorun"
 require "minitest/reporters"
 require "pry"
 
+require "much-stub"
+
 Minitest::Test.make_my_diffs_pretty!
 reporter_options = { color: true }
 Minitest::Reporters.use!(
@@ -21,4 +23,10 @@ Minitest::Reporters.use!(
 
 def context(*args, &block)
   describe(*args, &block)
+end
+
+class Minitest::Spec
+  after do
+    MuchStub.unstub!
+  end
 end
