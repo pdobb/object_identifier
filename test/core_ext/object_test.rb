@@ -21,7 +21,7 @@ describe Object do
 
   describe "#identify" do
     before do
-      MuchStub.on_call(ObjectIdentifier::Identifier, :identify) { |call|
+      MuchStub.on_call(ObjectIdentifier::Identifier, :call) { |call|
         @object_identifier_identifier_call = call
       }
     end
