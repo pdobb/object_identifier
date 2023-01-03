@@ -37,11 +37,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "byebug"
   spec.add_development_dependency "minitest"
   spec.add_development_dependency "minitest-reporters"
+  spec.add_development_dependency "much-stub"
   spec.add_development_dependency "pry"
   spec.add_development_dependency "pry-byebug"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "reek"
   spec.add_development_dependency "rubocop"
   spec.add_development_dependency "simplecov"
-  spec.add_development_dependency "much-stub"
 end

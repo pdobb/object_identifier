@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 # ObjectIdentifier::Formatters::StringFormatter builds a String to identify the
 # given object(s).
 class ObjectIdentifier::Formatters::StringFormatter
   NO_OBJECTS_INDICATOR = "[no objects]"
-  KLASS_NOT_GIVEN = :not_given
+  KLASS_NOT_GIVEN = "NOT_GIVEN"
 
   def self.call(objects, *attributes, **kargs)
     new(objects, *attributes, **kargs).call
   end
 
-  # @param objects [Object, [Object]] the object(s) to be interrogated for
+  # @param objects [Object, [Object, ...]] the object(s) to be interrogated for
   #   String values to be added to the output String
   # @param attributes [Array, *args] a list of method calls to interrogate the
   #   given object(s) with
@@ -24,7 +26,7 @@ class ObjectIdentifier::Formatters::StringFormatter
     @objects = ObjectIdentifier::ArrayWrap.(objects)
     @attributes = ObjectIdentifier::ArrayWrap.(attributes)
     @limit = (limit || @objects.size).to_i
-    @klass = klass
+    @klass = klass.to_s
   end
 
   # Output the self-identifying string for the given object(s). Will either
@@ -88,7 +90,7 @@ class ObjectIdentifier::Formatters::StringFormatter
   end
 
   def truncated_objects_count
-    objects_count - @limit
+    @truncated_objects_count ||= objects_count - @limit
   end
 
   def objects_count

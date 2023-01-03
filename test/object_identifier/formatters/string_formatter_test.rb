@@ -22,7 +22,8 @@ class ObjectIdentifier::Formatters::StringFormatterTest < Minitest::Spec
 
         it "ignores attributes that don't exist" do
           object = OpenStruct.new(name: "Pepper", color: :grey, beak_size: 4)
-          value(subject.call(object, %i[volume beak_size])).must_equal("OpenStruct[4]")
+          value(subject.call(object, %i[volume beak_size])).
+            must_equal("OpenStruct[4]")
         end
 
         it "returns the value of instance variables" do
@@ -43,7 +44,8 @@ class ObjectIdentifier::Formatters::StringFormatterTest < Minitest::Spec
           value(subject.call([])).must_equal("[no objects]")
         end
 
-        it "doesn't return '[no objects]', GIVEN object = an array of blank objects" do
+        it "doesn't return '[no objects]', "\
+           "GIVEN object = an array of blank objects" do
           value(subject.call([[], {}, nil])).wont_equal("[no objects]")
         end
 
@@ -63,7 +65,8 @@ class ObjectIdentifier::Formatters::StringFormatterTest < Minitest::Spec
 
         context "GIVEN object responds to :id" do
           it "returns 'Class[<id value>]', GIVEN no other attributes" do
-            value(subject.call(OpenStruct.new(id: 1))).must_equal("OpenStruct[1]")
+            value(subject.call(OpenStruct.new(id: 1))).
+              must_equal("OpenStruct[1]")
           end
         end
 
@@ -103,7 +106,8 @@ class ObjectIdentifier::Formatters::StringFormatterTest < Minitest::Spec
         end
 
         it "overrides object class name for all objects, GIVEN a :klass" do
-          value(subject.call(object, klass: "Bird")).must_equal("Bird[1], Bird[]")
+          value(subject.call(object, klass: "Bird")).
+            must_equal("Bird[1], Bird[]")
         end
 
         it "returns no class, GIVEN :klass is nil" do

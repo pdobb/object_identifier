@@ -38,8 +38,10 @@ describe Object do
 
       subject.identify(attributes, **options)
 
-      value(@object_identifier_identifier_call.pargs).must_equal([subject, attributes])
-      value(@object_identifier_identifier_call.kargs).must_equal(options)
+        value(@object_identifier_identifier_call.pargs).
+          must_equal([subject, attributes])
+        value(@object_identifier_identifier_call.kargs).must_equal(options)
+      end
     end
   end
 end
