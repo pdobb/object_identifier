@@ -1,5 +1,6 @@
 ### 0.5 - 2023-01-??
 - Add support for defining customer Formatters.
+- Add ObjectInspector::Configuration#formatter_class setting for overriding the default Formatter. See the README for more.
 
 ### 0.4.1 - 2022-12-30
 - Make compatible with Ruby 3.2 (and likely Ruby 3.0 and 3.1 as well).

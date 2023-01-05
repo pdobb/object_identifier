@@ -38,7 +38,7 @@ class ObjectIdentifier::IdentifierTest < Minitest::Spec
       end
 
       it "calls the given formatter, GIVEN a formatter" do
-        subject.call(objects, formatter: custom_formatter_class)
+        subject.call(objects, formatter_class: custom_formatter_class)
         value(@custom_formatter_call.args).must_equal([objects])
         value(@custom_formatter_call.kargs).must_be_nil
       end
@@ -51,7 +51,7 @@ class ObjectIdentifier::IdentifierTest < Minitest::Spec
       it "calls the given formatter + options, GIVEN a formatter + options" do
         subject.call(
           objects,
-          formatter: custom_formatter_class,
+          formatter_class: custom_formatter_class,
           **formatter_options)
         value(@custom_formatter_call.pargs).must_equal([objects])
         value(@custom_formatter_call.kargs).must_equal(formatter_options)

@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class ObjectIdentifier::Formatters::StringFormatterTest < Minitest::Spec
-  describe ObjectIdentifier::Formatters::StringFormatter do
-    let(:klazz) { ObjectIdentifier::Formatters::StringFormatter }
+class ObjectIdentifier::StringFormatterTest < Minitest::Spec
+  describe ObjectIdentifier::StringFormatter do
+    let(:klazz) { ObjectIdentifier::StringFormatter }
 
     describe ".call" do
       subject { klazz }
@@ -132,7 +132,7 @@ class ObjectIdentifier::Formatters::StringFormatterTest < Minitest::Spec
 
         it "returns the expected String" do
           value(subject.call(object)).must_equal(
-            "ObjectIdentifier::Formatters::StringFormatterTest::TestStruct[1]")
+            "ObjectIdentifier::StringFormatterTest::TestStruct[1]")
         end
 
         TestStruct = Struct.new(:id) # rubocop:disable Lint/ConstantDefinitionInBlock

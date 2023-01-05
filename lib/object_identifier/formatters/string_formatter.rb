@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# ObjectIdentifier::Formatters::StringFormatter builds a String to identify the
+# ObjectIdentifier::StringFormatter builds a String to identify the
 # given object(s).
-class ObjectIdentifier::Formatters::StringFormatter
+class ObjectIdentifier::StringFormatter
   NO_OBJECTS_INDICATOR = "[no objects]"
   KLASS_NOT_GIVEN = "NOT_GIVEN"
 

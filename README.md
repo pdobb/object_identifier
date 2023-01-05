@@ -44,6 +44,21 @@ Tested MRI Ruby Versions:
 * 2.6.6
 
 
+## Configuration
+
+Global/default values for ObjectIdentifier can be configured via the ObjectIdentifier::Configuration object.
+
+_Note: In a Rails app, the following would go in e.g. `config/initializers/object_identifier.rb`_
+
+```ruby
+# Default values are shown.
+ObjectIdentifier.configure do |config|
+  config.formatter_class = ObjectIdentifier::StringFormatter
+  config.default_attributes = %i[id]
+end
+```
+
+
 ## Usage
 
 ### Defaults

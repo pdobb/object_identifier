@@ -3,10 +3,6 @@
 # ObjectIdentifier is the base namespace for all modules/classes related to the
 # object_identifier gem.
 module ObjectIdentifier
-  # ObjectIdentifier::Formatters
-  module Formatters
-  end
-
   # ObjectIdentifier::ArrayWrap mirrors the implementation of Rails'
   # {Array.wrap} method. This allows us to get around objects that respond to
   # `to_a` (such as Struct) and, instead, either utilize `to_ary` or just
@@ -20,6 +16,43 @@ module ObjectIdentifier
       else
         [object]
       end
+    end
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.configure
+    yield(configuration)
+  end
+
+  def self.reset_configuration
+    @configuration = Configuration.new
+  end
+
+  # ObjectIdentifier::Configuration stores the default configuration options for
+  # the ObjectIdentifier gem. Modification of attributes is possible at any
+  # time, and values will persist for the duration of the running process.
+  class Configuration
+    attr_reader :formatter_class,
+                :default_attributes
+
+    def initialize
+      @formatter_class = ObjectIdentifier::StringFormatter
+      @default_attributes = %i[id]
+    end
+
+    def formatter_class=(value)
+      unless value.is_a?(Class)
+        raise TypeError, "Formatter must be a Class constant"
+      end
+
+      @formatter_class = value
+    end
+
+    def default_attributes=(value)
+      @default_attributes = value.to_a.map!(&:to_sym)
     end
   end
 end
