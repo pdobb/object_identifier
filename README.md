@@ -38,10 +38,12 @@ Or install it yourself as:
 ## Compatibility
 
 Tested MRI Ruby Versions:
-* 3.2.0
-* 2.4.9
-* 2.5.8
-* 2.6.6
+* 2.4 (not recently tested)
+* 2.5 (not recently tested)
+* 2.6 (not recently tested)
+* 2.7
+* 3.1
+* 3.2
 
 
 ## Configuration
@@ -168,7 +170,7 @@ ObjectIdentifier works great with the [ObjectInspector](https://github.com/pdobb
 
 ### Benchmarking Formatters
 
-Performance of Formatters can be tested by playing the [Formatters Benchmarking Scripts](https://github.com/pdobb/object_identifier/tree/master/scripts/benchmarking) in the pry console for this gem.
+Performance of Formatters can be tested by playing the [Formatters Benchmarking Scripts](https://github.com/pdobb/object_identifier/blob/master/scripts/benchmarking/formatters.rb) in the pry console for this gem.
 
 Custom Formatters may be similarly gauged for comparison by adding them to the `custom_formatter_klasses` array before playing the script.
 
