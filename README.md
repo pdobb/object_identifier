@@ -166,6 +166,23 @@ OpenStruct.new(my_value: my_value_object).identify(:my_value)
 ObjectIdentifier works great with the [ObjectInspector](https://github.com/pdobb/object_inspector) gem.
 
 
+### Benchmarking Formatters
+
+Performance of Formatters can be tested by playing the [Formatters Benchmarking Scripts](https://github.com/pdobb/object_identifier/tree/master/scripts/benchmarking) in the pry console for this gem.
+
+Custom Formatters may be similarly gauged for comparison by adding them to the `custom_formatter_klasses` array before playing the script.
+
+```ruby
+custom_formatter_klasses = [MyCustomFormatter]
+
+play scripts/benchmarking/formatters.rb
+# ObjectIdentifier::StringFormatter
+#     58.478k (± 0.8%) i/s -    295.776k in   5.058178s
+# MyCustomFormatter
+#                          ...
+```
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

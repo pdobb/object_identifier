@@ -34,6 +34,7 @@ Layout/LineLength:
   Max: 80
   Exclude:
     - "object_identifier.gemspec"
+    - "scripts/benchmarking/**/*"
 
 Layout/MultilineMethodCallBraceLayout:
   EnforcedStyle: same_line
@@ -52,6 +53,10 @@ Lint/AmbiguousOperator:
 
 Lint/AmbiguousRegexpLiteral:
   Enabled: false # Conflicts with other rules.
+
+Lint/OrAssignmentToConstant:
+  Exclude:
+    - "scripts/**/*"
 
 Lint/Void:
   CheckForMethodsWithNoSideEffects: true
