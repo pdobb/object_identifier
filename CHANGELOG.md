@@ -1,4 +1,4 @@
-### 0.6.0 - 2023-??
+### 0.6.0 - 2023-01-09
 - Internal refactoring for more Object-Oriented goodness.
 
 #### BREAKING
