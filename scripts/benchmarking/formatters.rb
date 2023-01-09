@@ -20,16 +20,22 @@ objects = [
   MyObject.new(id: 3, name: "NAME3")
 ].freeze
 
+def parameterize(attributes = [], **formatter_options)
+  ObjectIdentifier::Identifier.buid_parameters(
+    attributes: attributes,
+    formatter_options: formatter_options)
+end
+
 puts "== Averaged ============================================================="
 Benchmark.ips { |x|
   formatter_klasses.each do |formatter_klass|
     x.report(formatter_klass) {
       formatter_klass.new(objects[0]).call
-      formatter_klass.new(objects[0], %i[id name]).call
-      formatter_klass.new(objects[0], klass: "CustomClass").call
-      formatter_klass.new(objects[0], %i[id name], klass: "CustomClass").call
-      formatter_klass.new(objects, limit: 2).call
-      formatter_klass.new(objects, %i[id name], klass: "CustomClass", limit: 2).call
+      formatter_klass.new(objects[0], parameterize(%i[id name])).call
+      formatter_klass.new(objects[0], parameterize(klass: "CustomClass")).call
+      formatter_klass.new(objects[0], parameterize(%i[id name], klass: "CustomClass")).call
+      formatter_klass.new(objects, parameterize(limit: 2)).call
+      formatter_klass.new(objects, parameterize(%i[id name], klass: "CustomClass", limit: 2)).call
     }
   end
 
@@ -47,27 +53,27 @@ Benchmark.ips { |x|
   end
   formatter_klasses.each do |formatter_klass|
     x.report("#{formatter_klass} - Custom Attributes") {
-      formatter_klass.new(objects[0], %i[id name]).call
+      formatter_klass.new(objects[0], parameterize(%i[id name])).call
     }
   end
   formatter_klasses.each do |formatter_klass|
     x.report("#{formatter_klass} - Custom Class") {
-      formatter_klass.new(objects[0], klass: "CustomClass").call
+      formatter_klass.new(objects[0], parameterize(klass: "CustomClass")).call
     }
   end
   formatter_klasses.each do |formatter_klass|
     x.report("#{formatter_klass} - Custom Attributes & Custom Class") {
-      formatter_klass.new(objects[0], %i[id name], klass: "CustomClass").call
+      formatter_klass.new(objects[0], parameterize(%i[id name], klass: "CustomClass")).call
     }
   end
   formatter_klasses.each do |formatter_klass|
     x.report("#{formatter_klass} - Limit 2") {
-      formatter_klass.new(objects, limit: 2).call
+      formatter_klass.new(objects, parameterize(limit: 2)).call
     }
   end
   formatter_klasses.each do |formatter_klass|
     x.report("#{formatter_klass} - Custom Attributes & Custom Class & Limit 2") {
-      formatter_klass.new(objects, %i[id name], klass: "CustomClass", limit: 2).call
+      formatter_klass.new(objects, parameterize(%i[id name], klass: "CustomClass", limit: 2)).call
     }
   end
   # rubocop:enable Style/CombinableLoops

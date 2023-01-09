@@ -3,33 +3,45 @@
 require "test_helper"
 
 class ObjectIdentifier::StringFormatterTest < Minitest::Spec
+  # ObjectIdentifier::StringFormatterTest::TestStruct is a Test Dummy.
+  TestStruct = Struct.new(:id)
+
   describe ObjectIdentifier::StringFormatter do
     let(:klazz) { ObjectIdentifier::StringFormatter }
 
     describe ".call" do
+      def parameterize(attributes = [], **formatter_options)
+        ObjectIdentifier::Identifier.buid_parameters(
+          attributes: attributes,
+          formatter_options: formatter_options)
+      end
+
       subject { klazz }
 
       context "GIVEN a single object" do
         it "quotes Strings in attributes" do
           object = OpenStruct.new(name: "Pepper")
-          value(subject.call(object, :name)).must_equal(%(OpenStruct["Pepper"]))
+          value(subject.call(object, parameterize(:name))).
+            must_equal(%(OpenStruct["Pepper"]))
         end
 
         it "quotes symbols in attributes" do
           object = OpenStruct.new(name: "Pepper", color: :grey)
-          value(subject.call(object, :color)).must_equal(%(OpenStruct[:"grey"]))
+          value(subject.call(object, parameterize(:color))).
+            must_equal(%(OpenStruct[:"grey"]))
         end
 
         it "ignores attributes that don't exist" do
           object = OpenStruct.new(name: "Pepper", color: :grey, beak_size: 4)
-          value(subject.call(object, %i[volume beak_size])).
+          value(subject.call(object, parameterize(%i[volume beak_size]))).
             must_equal("OpenStruct[4]")
         end
 
         it "returns the value of instance variables" do
           object = OpenStruct.new
           object.instance_variable_set(:@var1, 1)
-          value(subject.call(object, :@var1)).must_equal("OpenStruct[1]")
+          value(subject.call(object, parameterize(:@var1))).
+            must_equal("OpenStruct[1]")
         end
 
         it "returns '[no objects]', GIVEN object = nil" do
@@ -54,7 +66,8 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
             object = OpenStruct.new(name: "Pepper", beak_size: 4, color: :grey)
             object.instance_variable_set(:@var1, 1)
 
-            result = subject.call(object, %i[name beak_size color @var1])
+            result =
+              subject.call(object, parameterize(%i[name beak_size color @var1]))
 
             expected_attributes_string =
               %(name:"Pepper", beak_size:4, color::"grey", @var1:1)
@@ -80,21 +93,23 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
           let(:object) { OpenStruct.new(id: 1) }
 
           it "overrides object class name" do
-            value(subject.call(object, klass: "Bird")).must_equal("Bird[1]")
+            value(
+              subject.call(object, parameterize(klass: "Bird"))).
+              must_equal("Bird[1]")
           end
 
-          it "returns no class, GIVEN :klass is nil" do
-            value(subject.call(object, klass: nil)).must_equal("[1]")
-          end
-
-          it "returns no class, GIVEN :klass is empty String" do
-            value(subject.call(object, klass: "")).must_equal("[1]")
+          it "returns no class name, GIVEN :klass is blank" do
+            value(
+              subject.call(object, parameterize(klass: [nil, ""].sample))).
+              must_equal("[1]")
           end
         end
 
         it "ignores :limit" do
           object = OpenStruct.new(id: 1)
-          value(subject.call(object, :id, limit: 3)).must_equal("OpenStruct[1]")
+          value(
+            subject.call(object, parameterize(:id, limit: 3))).
+            must_equal("OpenStruct[1]")
         end
       end
 
@@ -106,24 +121,24 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
         end
 
         it "overrides object class name for all objects, GIVEN a :klass" do
-          value(subject.call(object, klass: "Bird")).
+          value(
+            subject.call(object, parameterize(klass: "Bird"))).
             must_equal("Bird[1], Bird[]")
         end
 
-        it "returns no class, GIVEN :klass is nil" do
-          value(subject.call(object, klass: nil)).must_equal("[1], []")
-        end
-
-        it "returns no class, GIVEN :klass is empty String" do
-          value(subject.call(object, klass: "")).must_equal("[1], []")
+        it "returns no class name, GIVEN :klass is blank" do
+          value(
+            subject.call(object, parameterize(klass: [nil, ""].sample))).
+            must_equal("[1], []")
         end
 
         it "returns truncated list, GIVEN :limit" do
           object = "abcdefg".chars
-          value(subject.call(object, :upcase, limit: 3)).must_equal(
-            "String[\"A\"], "\
-            "String[\"B\"], "\
-            "String[\"C\"], ... (4 more)")
+          value(subject.call(object, parameterize(:upcase, limit: 3))).
+            must_equal(
+              "String[\"A\"], "\
+              "String[\"B\"], "\
+              "String[\"C\"], ... (4 more)")
         end
       end
 
@@ -134,8 +149,6 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
           value(subject.call(object)).must_equal(
             "ObjectIdentifier::StringFormatterTest::TestStruct[1]")
         end
-
-        TestStruct = Struct.new(:id) # rubocop:disable Lint/ConstantDefinitionInBlock
       end
     end
   end

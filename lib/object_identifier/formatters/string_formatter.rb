@@ -4,29 +4,21 @@
 # given object(s).
 class ObjectIdentifier::StringFormatter
   NO_OBJECTS_INDICATOR = "[no objects]"
-  KLASS_NOT_GIVEN = "NOT_GIVEN"
 
-  def self.call(objects, *attributes, **kargs)
-    new(objects, *attributes, **kargs).call
+  def self.call(
+        objects,
+        parameters = ObjectIdentifier::Identifier.buid_parameters)
+    new(objects, parameters).call
   end
 
   # @param objects [Object, [Object, ...]] the object(s) to be interrogated for
   #   String values to be added to the output String
-  # @param attributes [Array, *args] a list of method calls to interrogate the
-  #   given object(s) with
-  # @param limit [Integer, nil] a given limit on the number of objects to
-  #   interrogate
-  # @param klass [String, Symbol] a preferred type name for identifying the
-  #   given object(s) as
+  # @param parameters [ObjectIdentifier::Identifier::Parameters]
   def initialize(
         objects,
-        attributes = ObjectIdentifier::Identifier.default_attributes,
-        limit: nil,
-        klass: KLASS_NOT_GIVEN)
+        parameters = ObjectIdentifier::Identifier.buid_parameters)
     @objects = ObjectIdentifier::ArrayWrap.(objects)
-    @attributes = ObjectIdentifier::ArrayWrap.(attributes)
-    @limit = (limit || @objects.size).to_i
-    @klass = klass.to_s
+    @parameters = parameters
   end
 
   # Output the self-identifying string for the given object(s). Will either
@@ -47,38 +39,33 @@ class ObjectIdentifier::StringFormatter
   private
 
   def format_single_object(object = @objects.first)
-    SingleObject.(object, @attributes, klass: @klass)
+    SingleObject.(object, @parameters)
   end
 
   def format_multiple_objects
-    Collection.(@objects, @attributes, limit: @limit, klass: @klass)
+    Collection.(@objects, @parameters)
   end
 
-  # ObjectIdentifier::StringFormatter::Collection
+  # ObjectIdentifier::StringFormatter::Collection formats a collection-specific
+  # identification String, which will also necessarily be composed of
+  # {ObjectIdentifier::StringFormatter::SingleObject} identification Strings.
   class Collection
     # @return [String] the self-identifying String for the passed in object.
-    def self.call(*args, **kargs)
-      new(*args, **kargs).call
+    def self.call(*args)
+      new(*args).call
     end
 
     # @param objects [Object, [Object, ...]] the object(s) to be interrogated
     #   for String values to be added to the output String
-    # @param attributes [Array, *args] a list of method calls to interrogate the
-    #   given object(s) with
-    # @param limit [Integer, nil] a given limit on the number of objects to
-    #   interrogate
-    # @param klass [String, Symbol] a preferred type name for identifying the
-    #   given object(s) as
-    def initialize(objects, attributes, limit:, klass:)
+    # @param parameters [ObjectIdentifier::Identifier::Parameters]
+    def initialize(objects, parameters)
       @objects = objects
-      @attributes = attributes
-      @limit = limit
-      @klass = klass
+      @parameters = parameters
     end
 
     def call
       output_strings =
-        @objects.first(@limit).map { |obj| format_single_object(obj) }
+        @objects.first(limit).map { |obj| format_single_object(obj) }
       output_strings << "... (#{truncated_objects_count} more)" if truncated?
       output_strings.join(", ")
     end
@@ -86,11 +73,15 @@ class ObjectIdentifier::StringFormatter
     private
 
     def format_single_object(object = @objects.first)
-      SingleObject.(object, @attributes, klass: @klass)
+      SingleObject.(object, @parameters)
+    end
+
+    def limit
+      @parameters.limit { objects_count }
     end
 
     def truncated_objects_count
-      @truncated_objects_count ||= objects_count - @limit
+      @truncated_objects_count ||= objects_count - limit
     end
 
     def objects_count
@@ -102,23 +93,20 @@ class ObjectIdentifier::StringFormatter
     end
   end
 
-  # ObjectIdentifier::StringFormatter::SingleObject
+  # ObjectIdentifier::StringFormatter::SingleObject formats a
+  # single-object-specific identification String.
   class SingleObject
     # @return [String] the self-identifying String for the passed in object.
-    def self.call(*args, **kargs)
-      new(*args, **kargs).call
+    def self.call(*args)
+      new(*args).call
     end
 
     # @param object [Object] the object to be interrogated for String values to
     #   be added to the output String
-    # @param attributes [Array, *args] a list of method calls to interrogate the
-    #   given object(s) with
-    # @param klass [String, Symbol] a preferred type name for identifying the
-    #   given object(s) as
-    def initialize(object, attributes, klass:)
+    # @param parameters [ObjectIdentifier::Identifier::Parameters]
+    def initialize(object, parameters)
       @object = object
-      @attributes = attributes
-      @klass = klass
+      @parameters = parameters
     end
 
     # @return [String] the self-identifying String for {@object}.
@@ -136,11 +124,7 @@ class ObjectIdentifier::StringFormatter
     end
 
     def class_name
-      klass_given? ? @klass : @object.class.name
-    end
-
-    def klass_given?
-      @klass != KLASS_NOT_GIVEN
+      @parameters.klass { @object.class.name }
     end
 
     def formatted_attributes
@@ -161,13 +145,17 @@ class ObjectIdentifier::StringFormatter
     # @return [Hash]
     def attributes_hash
       @attributes_hash ||=
-        @attributes.each_with_object({}) { |key, acc|
+        attributes.each_with_object({}) { |key, acc|
           if @object.respond_to?(key, :include_private)
             acc[key] = @object.__send__(key)
           elsif key.to_s.start_with?("@")
             acc[key] = @object.instance_variable_get(key)
           end
         }
+    end
+
+    def attributes
+      @parameters.attributes
     end
   end
 end

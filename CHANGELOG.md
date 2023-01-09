@@ -1,3 +1,6 @@
+### 0.5.2 - 2023-??
+- Internal refactoring for more Object-Oriented goodness.
+
 ### 0.5.0 - 2023-01-04
 - Add support for defining customer Formatters.
 - Add ObjectInspector::Configuration#formatter_class setting for overriding the default Formatter. See the README for more.
