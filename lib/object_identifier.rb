@@ -127,6 +127,8 @@ module ObjectIdentifier
   # `to_a` (such as Struct) and, instead, either utilize `to_ary` or just
   # actually wrap the object in an Array ourselves.
   class ArrayWrap
+    # :reek:NilCheck
+    # :reek:ManualDispatch
     def self.call(object)
       if object.nil?
         []

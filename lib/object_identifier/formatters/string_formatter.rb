@@ -115,6 +115,7 @@ class ObjectIdentifier::StringFormatter
     private
 
     # Simple version of Rails' Object#blank? method.
+    # :reek:NilCheck
     def blank?
       @object.nil? || @object == [] || @object == {}
     end
@@ -129,6 +130,7 @@ class ObjectIdentifier::StringFormatter
       attributes_hash.map(&attributes_formatter).join(", ")
     end
 
+    # :reek:DuplicateMethodCall
     def attributes_formatter
       @attributes_formatter ||=
         if attributes_hash.one?
@@ -139,6 +141,7 @@ class ObjectIdentifier::StringFormatter
     end
 
     # @return [Hash]
+    # :reek:ManualDispatch
     def attributes_hash
       @attributes_hash ||=
         attributes.each_with_object({}) { |key, acc|

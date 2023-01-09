@@ -1,0 +1,11 @@
+directories:
+  "test":
+    IrresponsibleModule:
+      enabled: false
+    UtilityFunction:
+      enabled: false
+  "scripts":
+    IrresponsibleModule:
+      enabled: false
+    UtilityFunction:
+      enabled: false
