@@ -22,12 +22,12 @@ class ObjectTest < Minitest::Spec
 
     describe "#identify" do
       before do
-        MuchStub.on_call(ObjectIdentifier::Identifier, :call) { |call|
+        MuchStub.on_call(ObjectIdentifier, :call) { |call|
           @object_identifier_identifier_call = call
         }
       end
 
-      it "calls ObjectIdentifier::Identifier, passing self along" do
+      it "calls ObjectIdentifier, passing self along" do
         subject.identify
 
         value(@object_identifier_identifier_call.pargs).must_equal([subject])

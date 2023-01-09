@@ -1,5 +1,8 @@
-### 0.5.2 - 2023-??
+### 0.6.0 - 2023-??
 - Internal refactoring for more Object-Oriented goodness.
+
+#### BREAKING
+- Refactor `ObjectIdentifier::Identifier` to just `ObjectIdentifier`. This has no effect on instance method usage (e.g. `<my_object>.identify(...)`). But if any manual invocations were made (e.g. `ObjectIdentifier::Identifier.call(...)`) then they will need to be updated to `ObjectIdentifier.call(...)` (or just `ObjectIdentifier.(...)`, per your own style guide).
 
 ### 0.5.0 - 2023-01-04
 - Add support for defining customer Formatters.
