@@ -35,69 +35,139 @@ class ObjectIdentifier::StringFormatter
   #
   # @return [String] a string that identifies the object(s)
   def call
-    return NO_OBJECTS_INDICATOR if @objects.empty?
-
-    output_strings = @objects.first(@limit).map { |obj| format(obj) }
-    output_strings << "... (#{truncated_objects_count} more)" if truncated?
-    output_strings.join(", ")
+    if @objects.none?
+      NO_OBJECTS_INDICATOR
+    elsif @objects.one?
+      format_single_object
+    else # @objects.size > 1
+      format_multiple_objects
+    end
   end
 
   private
 
-  def format(object)
-    return NO_OBJECTS_INDICATOR if blank?(object)
-
-    "#{class_name(object)}[#{format_attributes(evaluate_attributes(object))}]"
+  def format_single_object(object = @objects.first)
+    SingleObject.(object, @attributes, klass: @klass)
   end
 
-  # Simple version of Rails' Object#blank? method.
-  def blank?(object)
-    object.nil? || object == [] || object == {}
+  def format_multiple_objects
+    Collection.(@objects, @attributes, limit: @limit, klass: @klass)
   end
 
-  def class_name(object)
-    klass_given? ? @klass : object.class.name
-  end
+  # ObjectIdentifier::StringFormatter::Collection
+  class Collection
+    # @return [String] the self-identifying String for the passed in object.
+    def self.call(*args, **kargs)
+      new(*args, **kargs).call
+    end
 
-  def klass_given?
-    @klass != KLASS_NOT_GIVEN
-  end
+    # @param objects [Object, [Object, ...]] the object(s) to be interrogated
+    #   for String values to be added to the output String
+    # @param attributes [Array, *args] a list of method calls to interrogate the
+    #   given object(s) with
+    # @param limit [Integer, nil] a given limit on the number of objects to
+    #   interrogate
+    # @param klass [String, Symbol] a preferred type name for identifying the
+    #   given object(s) as
+    def initialize(objects, attributes, limit:, klass:)
+      @objects = objects
+      @attributes = attributes
+      @limit = limit
+      @klass = klass
+    end
 
-  def format_attributes(attributes_hash)
-    return if attributes_hash.empty?
+    def call
+      output_strings =
+        @objects.first(@limit).map { |obj| format_single_object(obj) }
+      output_strings << "... (#{truncated_objects_count} more)" if truncated?
+      output_strings.join(", ")
+    end
 
-    attributes_formatter = determine_attributes_formatter(attributes_hash)
-    attributes_hash.map(&attributes_formatter).join(", ")
-  end
+    private
 
-  def determine_attributes_formatter(attributes_hash)
-    if attributes_hash.one?
-      ->(_key, value) { value.inspect_lit }
-    else
-      ->(key, value) { "#{key}:#{value.inspect_lit}" }
+    def format_single_object(object = @objects.first)
+      SingleObject.(object, @attributes, klass: @klass)
+    end
+
+    def truncated_objects_count
+      @truncated_objects_count ||= objects_count - @limit
+    end
+
+    def objects_count
+      @objects_count ||= @objects.size
+    end
+
+    def truncated?
+      truncated_objects_count.positive?
     end
   end
 
-  # @return [Hash]
-  def evaluate_attributes(object)
-    @attributes.each_with_object({}) { |key, acc|
-      if object.respond_to?(key, :include_private)
-        acc[key] = object.send(key)
-      elsif key.to_s.start_with?("@")
-        acc[key] = object.instance_variable_get(key)
-      end
-    }
-  end
+  # ObjectIdentifier::StringFormatter::SingleObject
+  class SingleObject
+    # @return [String] the self-identifying String for the passed in object.
+    def self.call(*args, **kargs)
+      new(*args, **kargs).call
+    end
 
-  def truncated_objects_count
-    @truncated_objects_count ||= objects_count - @limit
-  end
+    # @param object [Object] the object to be interrogated for String values to
+    #   be added to the output String
+    # @param attributes [Array, *args] a list of method calls to interrogate the
+    #   given object(s) with
+    # @param klass [String, Symbol] a preferred type name for identifying the
+    #   given object(s) as
+    def initialize(object, attributes, klass:)
+      @object = object
+      @attributes = attributes
+      @klass = klass
+    end
 
-  def objects_count
-    @objects_count ||= @objects.size
-  end
+    # @return [String] the self-identifying String for {@object}.
+    def call
+      return NO_OBJECTS_INDICATOR if blank?
 
-  def truncated?
-    truncated_objects_count.positive?
+      "#{class_name}[#{formatted_attributes}]"
+    end
+
+    private
+
+    # Simple version of Rails' Object#blank? method.
+    def blank?
+      @object.nil? || @object == [] || @object == {}
+    end
+
+    def class_name
+      klass_given? ? @klass : @object.class.name
+    end
+
+    def klass_given?
+      @klass != KLASS_NOT_GIVEN
+    end
+
+    def formatted_attributes
+      return if attributes_hash.empty?
+
+      attributes_hash.map(&attributes_formatter).join(", ")
+    end
+
+    def attributes_formatter
+      @attributes_formatter ||=
+        if attributes_hash.one?
+          ->(_key, value) { value.inspect_lit }
+        else # attributes_hash.size > 1
+          ->(key, value) { "#{key}:#{value.inspect_lit}" }
+        end
+    end
+
+    # @return [Hash]
+    def attributes_hash
+      @attributes_hash ||=
+        @attributes.each_with_object({}) { |key, acc|
+          if @object.respond_to?(key, :include_private)
+            acc[key] = @object.__send__(key)
+          elsif key.to_s.start_with?("@")
+            acc[key] = @object.instance_variable_get(key)
+          end
+        }
+    end
   end
 end
