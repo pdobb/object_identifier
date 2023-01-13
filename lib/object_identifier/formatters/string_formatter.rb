@@ -5,14 +5,14 @@
 class ObjectIdentifier::StringFormatter
   NO_OBJECTS_INDICATOR = "[no objects]"
 
-  def self.call(objects, parameters = ObjectIdentifier.buid_parameters)
+  def self.call(objects, parameters = ObjectIdentifier::Parameters.build)
     new(objects, parameters).call
   end
 
   # @param objects [Object, [Object, ...]] the object(s) to be interrogated for
   #   String values to be added to the output String
   # @param parameters [ObjectIdentifier::Parameters]
-  def initialize(objects, parameters = ObjectIdentifier.buid_parameters)
+  def initialize(objects, parameters = ObjectIdentifier::Parameters.build)
     @objects = ObjectIdentifier::ArrayWrap.(objects)
     @parameters = parameters
   end

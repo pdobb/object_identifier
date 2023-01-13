@@ -21,7 +21,7 @@ objects = [
 ].freeze
 
 def parameterize(attributes = [], **formatter_options)
-  ObjectIdentifier.buid_parameters(
+  ObjectIdentifier::Parameters.build(
     attributes: attributes,
     formatter_options: formatter_options)
 end

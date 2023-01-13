@@ -6,17 +6,17 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
   # ObjectIdentifier::StringFormatterTest::TestStruct is a Test Dummy.
   TestStruct = Struct.new(:id)
 
-  describe ObjectIdentifier::StringFormatter do
-    let(:klazz) { ObjectIdentifier::StringFormatter }
+  describe "ObjectIdentifier::StringFormatter" do
+    let(:unit_class) { ObjectIdentifier::StringFormatter }
 
     describe ".call" do
       def parameterize(attributes = [], **formatter_options)
-        ObjectIdentifier.buid_parameters(
+        ObjectIdentifier::Parameters.build(
           attributes: attributes,
           formatter_options: formatter_options)
       end
 
-      subject { klazz }
+      subject { unit_class }
 
       context "GIVEN a single object" do
         it "quotes Strings in attributes" do
