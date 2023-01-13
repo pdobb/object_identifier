@@ -14,12 +14,14 @@ module ObjectIdentifier
         **formatter_options)
 
     parameters =
-      Parameters.build(
+      ObjectIdentifier::Parameters.build(
         attributes: attributes,
         formatter_options: formatter_options)
 
     formatter_class.(objects, parameters)
   end
+
+  # Default Configuration Accessors
 
   def self.default_formatter_class
     configuration.formatter_class
@@ -28,6 +30,8 @@ module ObjectIdentifier
   def self.default_attributes
     configuration.default_attributes
   end
+
+  # Custom Configuration Getters/Setters
 
   def self.configuration
     @configuration ||= Configuration.new
@@ -65,27 +69,10 @@ module ObjectIdentifier
       @default_attributes = value.to_a.map!(&:to_sym)
     end
   end
-
-  # ObjectIdentifier::ArrayWrap mirrors the implementation of Rails'
-  # {Array.wrap} method. This allows us to get around objects that respond to
-  # `to_a` (such as Struct) and, instead, either utilize `to_ary` or just
-  # actually wrap the object in an Array ourselves.
-  class ArrayWrap
-    # :reek:NilCheck
-    # :reek:ManualDispatch
-    def self.call(object)
-      if object.nil?
-        []
-      elsif object.respond_to?(:to_ary)
-        object.to_ary || [object]
-      else
-        [object]
-      end
-    end
-  end
 end
 
 require "object_identifier/version"
+require "object_identifier/array_wrap"
 require "object_identifier/parameters"
 require "object_identifier/formatters/string_formatter"
 require "core_ext/object"
