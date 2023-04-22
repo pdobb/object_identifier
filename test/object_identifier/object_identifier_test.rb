@@ -37,12 +37,10 @@ class ObjectIdentifierTest < Minitest::Spec
         MuchStub.on_call(CustomFormatter, :call) { |call|
           @custom_formatter_call = call
         }
-        MuchStub.on_call(
-          ObjectIdentifier,
-          :default_formatter_class) { |_call|
-            @default_formatter_class_called = true
-            DefaultFormatter
-          }
+        MuchStub.on_call(ObjectIdentifier, :default_formatter_class) { |_call|
+          @default_formatter_class_called = true
+          DefaultFormatter
+        }
         MuchStub.tap_on_call(
           ObjectIdentifier::Parameters,
           :new) { |_value, call|

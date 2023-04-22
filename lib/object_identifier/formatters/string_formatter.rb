@@ -35,22 +35,17 @@ class ObjectIdentifier::StringFormatter
   private
 
   def format_single_object(object = @objects.first)
-    SingleObject.(object, @parameters)
+    SingleObject.new(object, @parameters).call
   end
 
   def format_multiple_objects
-    Collection.(@objects, @parameters)
+    Collection.new(@objects, @parameters).call
   end
 
   # ObjectIdentifier::StringFormatter::Collection formats a collection-specific
   # identification String, which will also necessarily be composed of
   # {ObjectIdentifier::StringFormatter::SingleObject} identification Strings.
   class Collection
-    # @return [String] the self-identifying String for the passed in object.
-    def self.call(*args)
-      new(*args).call
-    end
-
     # @param objects [Object, [Object, ...]] the object(s) to be interrogated
     #   for String values to be added to the output String
     # @param parameters [ObjectIdentifier::Parameters]
@@ -60,20 +55,23 @@ class ObjectIdentifier::StringFormatter
     end
 
     def call
-      output_strings =
-        @objects.first(limit).map { |obj| format_single_object(obj) }
-      output_strings << "... (#{truncated_objects_count} more)" if truncated?
-      output_strings.join(", ")
+      parts = @objects.first(limit).map { |obj| format_single_object(obj) }
+      parts << "... (#{truncated_objects_count} more)" if truncated?
+      parts.join(", ")
     end
 
     private
 
-    def format_single_object(object = @objects.first)
-      SingleObject.(object, @parameters)
+    def format_single_object(object)
+      SingleObject.new(object, @parameters).call
     end
 
     def limit
       @parameters.limit { objects_count }
+    end
+
+    def truncated?
+      truncated_objects_count.positive?
     end
 
     def truncated_objects_count
@@ -83,20 +81,11 @@ class ObjectIdentifier::StringFormatter
     def objects_count
       @objects_count ||= @objects.size
     end
-
-    def truncated?
-      truncated_objects_count.positive?
-    end
   end
 
   # ObjectIdentifier::StringFormatter::SingleObject formats a
   # single-object-specific identification String.
   class SingleObject
-    # @return [String] the self-identifying String for the passed in object.
-    def self.call(*args)
-      new(*args).call
-    end
-
     # @param object [Object] the object to be interrogated for String values to
     #   be added to the output String
     # @param parameters [ObjectIdentifier::Parameters]
@@ -125,8 +114,6 @@ class ObjectIdentifier::StringFormatter
     end
 
     def formatted_attributes
-      return if attributes_hash.empty?
-
       attributes_hash.map(&attributes_formatter).join(", ")
     end
 
