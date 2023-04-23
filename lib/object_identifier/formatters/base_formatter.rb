@@ -2,6 +2,9 @@
 
 # ObjectIdentifier::BaseFormatter is an abstract base class for formatters.
 class ObjectIdentifier::BaseFormatter
+  attr_reader :objects,
+              :parameters
+
   def self.call(*args, **kargs)
     new(*args, **kargs).call
   end

@@ -11,29 +11,32 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
   #
   # @return [String] a string that identifies the object(s)
   def call
-    if @objects.none?
+    if objects.none?
       NO_OBJECTS_INDICATOR
-    elsif @objects.one?
+    elsif objects.one?
       format_single_object
-    else # @objects.size > 1
+    else # objects.size > 1
       format_multiple_objects
     end
   end
 
   private
 
-  def format_single_object(object = @objects.first)
-    SingleObject.new(object, @parameters).call
+  def format_single_object(object = objects.first)
+    SingleObject.new(object, parameters).call
   end
 
   def format_multiple_objects
-    Collection.new(@objects, @parameters).call
+    Collection.new(objects, parameters).call
   end
 
   # ObjectIdentifier::StringFormatter::Collection formats a collection-specific
   # identification String, which will also necessarily be composed of
   # {ObjectIdentifier::StringFormatter::SingleObject} identification Strings.
   class Collection
+    attr_reader :objects,
+                :parameters
+
     # @param objects [Object, [Object, ...]] the object(s) to be interrogated
     #   for String values to be added to the output String
     # @param parameters [ObjectIdentifier::Parameters]
@@ -43,7 +46,7 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     end
 
     def call
-      parts = @objects.first(limit).map { |obj| format_single_object(obj) }
+      parts = objects.first(limit).map { |obj| format_single_object(obj) }
       parts << "... (#{truncated_objects_count} more)" if truncated?
       parts.join(", ")
     end
@@ -51,11 +54,11 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     private
 
     def format_single_object(object)
-      SingleObject.new(object, @parameters).call
+      SingleObject.new(object, parameters).call
     end
 
     def limit
-      @parameters.limit { objects_count }
+      parameters.limit { objects_count }
     end
 
     def truncated?
@@ -67,13 +70,16 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     end
 
     def objects_count
-      @objects_count ||= @objects.size
+      @objects_count ||= objects.size
     end
   end
 
   # ObjectIdentifier::StringFormatter::SingleObject formats a
   # single-object-specific identification String.
   class SingleObject
+    attr_reader :object,
+                :parameters
+
     # @param object [Object] the object to be interrogated for String values to
     #   be added to the output String
     # @param parameters [ObjectIdentifier::Parameters]
@@ -82,7 +88,7 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
       @parameters = parameters
     end
 
-    # @return [String] the self-identifying String for {@object}.
+    # @return [String] the self-identifying String for {object}.
     def call
       return NO_OBJECTS_INDICATOR if blank?
 
@@ -94,11 +100,11 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     # Simple version of Rails' Object#blank? method.
     # :reek:NilCheck
     def blank?
-      @object.nil? || @object == [] || @object == {}
+      object.nil? || object == [] || object == {}
     end
 
     def class_name
-      @parameters.klass { @object.class.name }
+      parameters.klass { object.class.name }
     end
 
     def formatted_attributes
@@ -120,16 +126,16 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     def attributes_hash
       @attributes_hash ||=
         attributes.each_with_object({}) { |key, acc|
-          if @object.respond_to?(key, :include_private)
-            acc[key] = @object.__send__(key)
+          if object.respond_to?(key, :include_private)
+            acc[key] = object.__send__(key)
           elsif key.to_s.start_with?("@")
-            acc[key] = @object.instance_variable_get(key)
+            acc[key] = object.instance_variable_get(key)
           end
         }
     end
 
     def attributes
-      @parameters.attributes
+      parameters.attributes
     end
   end
 end
