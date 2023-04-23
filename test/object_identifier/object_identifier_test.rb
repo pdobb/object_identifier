@@ -4,14 +4,14 @@ require "test_helper"
 
 class ObjectIdentifierTest < Minitest::Spec
   # ObjectIdentifierTest::DefaultFormatter is a Test Dummy.
-  class DefaultFormatter
-    def self.call(*)
+  class DefaultFormatter < ObjectIdentifier::BaseFormatter
+    def call(*)
     end
   end
 
   # ObjectIdentifierTest::CustomFormatter is a Test Dummy.
-  class CustomFormatter
-    def self.call(*)
+  class CustomFormatter < ObjectIdentifier::BaseFormatter
+    def call(*)
     end
   end
 

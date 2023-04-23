@@ -2,20 +2,8 @@
 
 # ObjectIdentifier::StringFormatter builds a String to identify the
 # given object(s).
-class ObjectIdentifier::StringFormatter
+class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
   NO_OBJECTS_INDICATOR = "[no objects]"
-
-  def self.call(objects, parameters = ObjectIdentifier::Parameters.build)
-    new(objects, parameters).call
-  end
-
-  # @param objects [Object, [Object, ...]] the object(s) to be interrogated for
-  #   String values to be added to the output String
-  # @param parameters [ObjectIdentifier::Parameters]
-  def initialize(objects, parameters = ObjectIdentifier::Parameters.build)
-    @objects = ObjectIdentifier::ArrayWrap.(objects)
-    @parameters = parameters
-  end
 
   # Output the self-identifying string for the given object(s). Will either
   # return a single object representation or a list of object

@@ -74,6 +74,7 @@ end
 require "object_identifier/version"
 require "object_identifier/array_wrap"
 require "object_identifier/parameters"
+require "object_identifier/formatters/base_formatter"
 require "object_identifier/formatters/string_formatter"
 require "core_ext/object"
 require "core_ext/string"
