@@ -14,25 +14,25 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     if objects.none?
       NO_OBJECTS_INDICATOR
     elsif objects.one?
-      format_single_object
+      format_item
     else # objects.size > 1
-      format_multiple_objects
+      format_collection
     end
   end
 
   private
 
-  def format_single_object(object = objects.first)
-    SingleObject.new(object, parameters).call
+  def format_collection
+    Collection.new(objects, parameters).call
   end
 
-  def format_multiple_objects
-    Collection.new(objects, parameters).call
+  def format_item(object = objects.first)
+    Item.new(object, parameters).call
   end
 
   # ObjectIdentifier::StringFormatter::Collection formats a collection-specific
   # identification String, which will also necessarily be composed of
-  # {ObjectIdentifier::StringFormatter::SingleObject} identification Strings.
+  # {ObjectIdentifier::StringFormatter::Item} identification Strings.
   class Collection
     attr_reader :objects,
                 :parameters
@@ -46,15 +46,15 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     end
 
     def call
-      parts = objects.first(limit).map { |obj| format_single_object(obj) }
+      parts = objects.first(limit).map { |obj| format_item(obj) }
       parts << "... (#{truncated_objects_count} more)" if truncated?
       parts.join(", ")
     end
 
     private
 
-    def format_single_object(object)
-      SingleObject.new(object, parameters).call
+    def format_item(object)
+      Item.new(object, parameters).call
     end
 
     def limit
@@ -74,9 +74,9 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     end
   end
 
-  # ObjectIdentifier::StringFormatter::SingleObject formats a
-  # single-object-specific identification String.
-  class SingleObject
+  # ObjectIdentifier::StringFormatter::Item formats a single-object-specific
+  # identification String.
+  class Item
     attr_reader :object,
                 :parameters
 
