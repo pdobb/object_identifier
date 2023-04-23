@@ -6,6 +6,7 @@ class ObjectIdentifierTest < Minitest::Spec
   # ObjectIdentifierTest::CustomFormatter is a Test Double.
   class CustomFormatter < ObjectIdentifier::BaseFormatter
     def call(*)
+      "FAKE_CALL_RESULT"
     end
   end
 
@@ -16,7 +17,6 @@ class ObjectIdentifierTest < Minitest::Spec
     let(:objects) { ["a", 1, Struct.new(:id), [], {}].sample }
     let(:default_formatter_class) { unit_class::StringFormatter }
     let(:custom_formatter_class) { CustomFormatter }
-    let(:default_formatter_options) { {} }
     let(:custom_formatter_options) { { limit: 9, klass: "TestClass" } }
     let(:default_attributes) { %i[id] }
     let(:custom_attributes) { %i[id name] }
@@ -29,51 +29,48 @@ class ObjectIdentifierTest < Minitest::Spec
 
     describe ".call" do
       before do
-        MuchStub.tap_on_call(
-          ObjectIdentifier::Parameters,
-          :build) { |_value, call|
-            @parameters_build_call = call
-          }
+        MuchStub.tap_on_call(unit_class::Parameters, :build) { |_value, call|
+          @parameters_build_call = call
+        }
       end
 
       context "GIVEN no custom formatter nor custom attributes" do
         before do
-          MuchStub.tap(ObjectIdentifier, :default_formatter_class) { |*|
+          MuchStub.tap(default_formatter_class, :call) { |*|
             @default_formatter_class_called = true
           }
+        end
 
-          it "calls the default formatter + attributes" do
-            subject.call(objects)
+        it "calls the default formatter + attributes" do
+          result = subject.call(objects)
+          value(result).must_be_instance_of(String)
 
-            value(@default_formatter_class_called).must_equal(true)
-            value(@parameters_build_call.kargs).must_equal({
-              attributes: default_attributes,
-              formatter_options: default_formatter_options
-            })
-          end
+          value(@default_formatter_class_called).must_equal(true)
+          value(@parameters_build_call.kargs).must_equal({
+            attributes: [],
+            formatter_options: {}
+          })
+
         end
       end
 
       context "GIVEN a custom formatter + custom attributes + custom formatter options" do
         before do
-          MuchStub.on_call(custom_formatter_class, :call) { |call|
-            @custom_formatter_call = call
+          MuchStub.tap(custom_formatter_class, :call) { |*|
+            @custom_formatter_class_called = true
           }
         end
 
         it "calls the given formatter + attributes + options" do
-          subject.call(
-            objects,
-            custom_attributes,
-            formatter_class: custom_formatter_class,
-            **custom_formatter_options)
+          result =
+            subject.call(
+              objects,
+              custom_attributes,
+              formatter_class: custom_formatter_class,
+              **custom_formatter_options)
+          value(result).must_equal("FAKE_CALL_RESULT")
 
-          value(@custom_formatter_call.pargs.size).must_equal(2)
-          value(@custom_formatter_call.pargs.first).must_equal(objects)
-          value(@custom_formatter_call.pargs[1]).must_be_instance_of(
-            ObjectIdentifier::Parameters)
-          value(@custom_formatter_call.kargs).must_be_nil
-
+          value(@custom_formatter_class_called).must_equal(true)
           value(@parameters_build_call.kargs).must_equal(
             {
               attributes: custom_attributes,
