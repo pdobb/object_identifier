@@ -8,7 +8,9 @@ class ObjectIdentifier::Parameters
 
   attr_reader :attributes
 
-  # Factory method for building an {ObjectIdentifier::Parameters} object.
+  # Factory method for building an {ObjectIdentifier::Parameters} object. Uses
+  # ObjectIdentifier.default_attributes if the given `attributes` array is
+  # empty.
   def self.build(attributes: [], formatter_options: {})
     attrs = ObjectIdentifier::ArrayWrap.(attributes)
     attrs = ObjectIdentifier.default_attributes if attrs.empty?

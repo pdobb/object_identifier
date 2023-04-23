@@ -3,13 +3,7 @@
 require "test_helper"
 
 class ObjectIdentifierTest < Minitest::Spec
-  # ObjectIdentifierTest::DefaultFormatter is a Test Dummy.
-  class DefaultFormatter < ObjectIdentifier::BaseFormatter
-    def call(*)
-    end
-  end
-
-  # ObjectIdentifierTest::CustomFormatter is a Test Dummy.
+  # ObjectIdentifierTest::CustomFormatter is a Test Double.
   class CustomFormatter < ObjectIdentifier::BaseFormatter
     def call(*)
     end
@@ -20,9 +14,10 @@ class ObjectIdentifierTest < Minitest::Spec
     let(:configuration_unit_class) { unit_class::Configuration }
 
     let(:objects) { ["a", 1, Struct.new(:id), [], {}].sample }
-    let(:default_formatter) { unit_class::StringFormatter }
-    let(:custom_formatter) { CustomFormatter }
-    let(:formatter_options) { { limit: 9, klass: "TestClass" } }
+    let(:default_formatter_class) { unit_class::StringFormatter }
+    let(:custom_formatter_class) { CustomFormatter }
+    let(:default_formatter_options) { {} }
+    let(:custom_formatter_options) { { limit: 9, klass: "TestClass" } }
     let(:default_attributes) { %i[id] }
     let(:custom_attributes) { %i[id name] }
 
@@ -34,50 +29,57 @@ class ObjectIdentifierTest < Minitest::Spec
 
     describe ".call" do
       before do
-        MuchStub.on_call(CustomFormatter, :call) { |call|
-          @custom_formatter_call = call
-        }
-        MuchStub.on_call(ObjectIdentifier, :default_formatter_class) { |_call|
-          @default_formatter_class_called = true
-          DefaultFormatter
-        }
         MuchStub.tap_on_call(
           ObjectIdentifier::Parameters,
-          :new) { |_value, call|
-            @parameters_initializer_call = call
+          :build) { |_value, call|
+            @parameters_build_call = call
           }
       end
 
-      it "calls the default formatter + attributes, "\
-         "GIVEN no custom formatter nor custom attributes" do
-        subject.call(objects)
+      context "GIVEN no custom formatter nor custom attributes" do
+        before do
+          MuchStub.tap(ObjectIdentifier, :default_formatter_class) { |*|
+            @default_formatter_class_called = true
+          }
 
-        value(@custom_formatter_call).must_be_nil
-        value(@default_formatter_class_called).must_equal(true)
+          it "calls the default formatter + attributes" do
+            subject.call(objects)
 
-        value(@parameters_initializer_call.kargs).must_equal(
-          { attributes: default_attributes, formatter_options: {} })
+            value(@default_formatter_class_called).must_equal(true)
+            value(@parameters_build_call.kargs).must_equal({
+              attributes: default_attributes,
+              formatter_options: default_formatter_options
+            })
+          end
+        end
       end
 
-      it "calls the given formatter + attributes + options, "\
-         "GIVEN a custom formatter + custom attributes + custom options" do
-        subject.call(
-          objects,
-          custom_attributes,
-          formatter_class: custom_formatter,
-          **formatter_options)
+      context "GIVEN a custom formatter + custom attributes + custom formatter options" do
+        before do
+          MuchStub.on_call(custom_formatter_class, :call) { |call|
+            @custom_formatter_call = call
+          }
+        end
 
-        value(@custom_formatter_call.pargs.size).must_equal(2)
-        value(@custom_formatter_call.pargs.first).must_equal(objects)
-        value(@custom_formatter_call.pargs[1]).must_be_instance_of(
-          ObjectIdentifier::Parameters)
-        value(@custom_formatter_call.kargs).must_be_nil
+        it "calls the given formatter + attributes + options" do
+          subject.call(
+            objects,
+            custom_attributes,
+            formatter_class: custom_formatter_class,
+            **custom_formatter_options)
 
-        value(@parameters_initializer_call.kargs).must_equal(
-          {
-            attributes: custom_attributes,
-            formatter_options: formatter_options
-          })
+          value(@custom_formatter_call.pargs.size).must_equal(2)
+          value(@custom_formatter_call.pargs.first).must_equal(objects)
+          value(@custom_formatter_call.pargs[1]).must_be_instance_of(
+            ObjectIdentifier::Parameters)
+          value(@custom_formatter_call.kargs).must_be_nil
+
+          value(@parameters_build_call.kargs).must_equal(
+            {
+              attributes: custom_attributes,
+              formatter_options: custom_formatter_options
+            })
+        end
       end
     end
 
@@ -85,7 +87,7 @@ class ObjectIdentifierTest < Minitest::Spec
       subject { unit_class }
 
       it "returns the expected constant" do
-        value(subject.default_formatter_class).must_equal(default_formatter)
+        value(subject.default_formatter_class).must_equal(default_formatter_class)
       end
     end
 
@@ -107,7 +109,7 @@ class ObjectIdentifierTest < Minitest::Spec
       it "contains the expected default values" do
         configuration = subject.configuration
 
-        value(configuration.formatter_class).must_equal(default_formatter)
+        value(configuration.formatter_class).must_equal(default_formatter_class)
         value(configuration.default_attributes).must_equal(default_attributes)
       end
     end
@@ -118,7 +120,7 @@ class ObjectIdentifierTest < Minitest::Spec
       context "GIVEN a custom configuration" do
         before do
           subject.configure do |config|
-            config.formatter_class = CustomFormatter
+            config.formatter_class = custom_formatter_class
             config.default_attributes = custom_attributes
           end
         end
@@ -128,7 +130,7 @@ class ObjectIdentifierTest < Minitest::Spec
         it "sets custom configuration and converts values to Strings" do
           configuration = subject.configuration
 
-          value(configuration.formatter_class).must_equal(CustomFormatter)
+          value(configuration.formatter_class).must_equal(custom_formatter_class)
           value(configuration.default_attributes).must_equal(
             custom_attributes)
         end
@@ -141,7 +143,7 @@ class ObjectIdentifierTest < Minitest::Spec
       it "resets the Configuration to the expected default values" do
         configuration = subject.configuration
 
-        value(configuration.formatter_class).must_equal(default_formatter)
+        value(configuration.formatter_class).must_equal(default_formatter_class)
         value(configuration.default_attributes).must_equal(
           default_attributes)
       end
@@ -153,8 +155,8 @@ class ObjectIdentifierTest < Minitest::Spec
 
         context "GIVEN a Class constant" do
           it "sets the value as expected" do
-            subject.formatter_class = CustomFormatter
-            value(subject.formatter_class).must_equal(CustomFormatter)
+            subject.formatter_class = custom_formatter_class
+            value(subject.formatter_class).must_equal(custom_formatter_class)
           end
         end
 
