@@ -33,7 +33,7 @@ class ObjectTest < Minitest::Spec
         value(@object_identifier_identifier_call.pargs).must_equal([subject])
       end
 
-      it "also passes along args and kargs when given" do
+      it "also passes along args and kwargs when given" do
         attributes = %i[arg1 arg2]
         options = { limit: 9 }
 

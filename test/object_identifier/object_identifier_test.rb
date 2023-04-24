@@ -50,11 +50,10 @@ class ObjectIdentifierTest < Minitest::Spec
             attributes: [],
             formatter_options: {}
           })
-
         end
       end
 
-      context "GIVEN a custom formatter + custom attributes + custom formatter options" do
+      context "GIVEN a custom formatter + attributes + formatter options" do
         before do
           MuchStub.tap(custom_formatter_class, :call) { |*|
             @custom_formatter_class_called = true
@@ -84,7 +83,8 @@ class ObjectIdentifierTest < Minitest::Spec
       subject { unit_class }
 
       it "returns the expected constant" do
-        value(subject.default_formatter_class).must_equal(default_formatter_class)
+        value(subject.default_formatter_class).must_equal(
+          default_formatter_class)
       end
     end
 
@@ -127,7 +127,8 @@ class ObjectIdentifierTest < Minitest::Spec
         it "sets custom configuration and converts values to Strings" do
           configuration = subject.configuration
 
-          value(configuration.formatter_class).must_equal(custom_formatter_class)
+          value(configuration.formatter_class).must_equal(
+            custom_formatter_class)
           value(configuration.default_attributes).must_equal(
             custom_attributes)
         end

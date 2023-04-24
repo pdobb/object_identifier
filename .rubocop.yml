@@ -86,6 +86,10 @@ Style/ClassAndModuleChildren:
   AutoCorrect: true
   EnforcedStyle: compact
 
+Style/Documentation:
+  Exclude:
+    - "test/**/*"
+
 Style/EmptyElse:
   # It"s helpful to show intent by including a comment in an else block.
   Enabled: false

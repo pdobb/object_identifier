@@ -39,7 +39,7 @@ class Object
   #
   #   (1..10).to_a.identify(:to_f, limit: 2)
   #   # => "Integer[to_f:1.0], Integer[to_f:2.0], ... (8 more)"
-  def identify(*args, **kargs)
-    ObjectIdentifier.(self, *args, **kargs)
+  def identify(*args, **kwargs)
+    ObjectIdentifier.(self, *args, **kwargs)
   end
 end

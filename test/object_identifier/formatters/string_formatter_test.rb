@@ -70,7 +70,8 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
             object.instance_variable_set(:@var1, 1)
 
             result =
-              subject.call(object, **parameterize(%i[name beak_size color @var1]))
+              subject.call(
+                object, **parameterize(%i[name beak_size color @var1]))
 
             expected_attributes_string =
               %(name:"Pepper", beak_size:4, color::"grey", @var1:1)
