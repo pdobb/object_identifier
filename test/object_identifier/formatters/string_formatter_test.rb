@@ -23,21 +23,21 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
 
       context "GIVEN a single object" do
         it "quotes Strings in attributes" do
-          object = OpenStruct.new(name: "Pepper")
+          object = OpenStruct.new(name: "TestName")
           value(subject.call(object, **parameterize(:name))).
-            must_equal(%(OpenStruct["Pepper"]))
+            must_equal(%(OpenStruct["TestName"]))
         end
 
         it "quotes symbols in attributes" do
-          object = OpenStruct.new(name: "Pepper", color: :grey)
-          value(subject.call(object, **parameterize(:color))).
-            must_equal(%(OpenStruct[:"grey"]))
+          object = OpenStruct.new(name: "TestName", attr1: :value1)
+          value(subject.call(object, **parameterize(:attr1))).
+            must_equal(%(OpenStruct[:"value1"]))
         end
 
         it "ignores attributes that don't exist" do
-          object = OpenStruct.new(name: "Pepper", color: :grey, beak_size: 4)
-          value(subject.call(object, **parameterize(%i[volume beak_size]))).
-            must_equal("OpenStruct[4]")
+          object = OpenStruct.new(name: "TestName", attr1: :value1)
+          value(subject.call(object, **parameterize(%i[attr1 unknown_attr1]))).
+            must_equal(%(OpenStruct[:"value1"]))
         end
 
         it "returns the value of instance variables" do
@@ -66,15 +66,15 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
 
         context "GIVEN multiple attribute to identify" do
           it "includes all of the given attribute names/values" do
-            object = OpenStruct.new(name: "Pepper", beak_size: 4, color: :grey)
+            object = OpenStruct.new(name: "TestName", attr1: :value1)
             object.instance_variable_set(:@var1, 1)
 
             result =
               subject.call(
-                object, **parameterize(%i[name beak_size color @var1]))
+                object, **parameterize(%i[name attr1 @var1]))
 
             expected_attributes_string =
-              %(name:"Pepper", beak_size:4, color::"grey", @var1:1)
+              %(name:"TestName", attr1::"value1", @var1:1)
             value(result).must_equal(
               "OpenStruct[#{expected_attributes_string}]")
           end
@@ -98,8 +98,8 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
 
           it "overrides object class name" do
             value(
-              subject.call(object, **parameterize(klass: "Bird"))).
-              must_equal("Bird[1]")
+              subject.call(object, **parameterize(klass: "MyClass"))).
+              must_equal("MyClass[1]")
           end
 
           it "returns no class name, GIVEN :klass is blank" do
@@ -126,8 +126,8 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
 
         it "overrides object class name for all objects, GIVEN a :klass" do
           value(
-            subject.call(object, **parameterize(klass: "Bird"))).
-            must_equal("Bird[1], Bird[]")
+            subject.call(object, **parameterize(klass: "MyClass"))).
+            must_equal("MyClass[1], MyClass[]")
         end
 
         it "returns no class name, GIVEN :klass is blank" do
