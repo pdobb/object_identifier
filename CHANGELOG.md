@@ -1,3 +1,11 @@
+### UNRELEASED
+- Internal refactoring for more Object-Oriented goodness.
+- Internal refactoring for less brittle tests.
+
+#### BREAKING
+- Change method signature of ObjectIdentifier FormatterClass initialization to expect `parameters` as a keyword argument.
+- Add ObjectIdentifier::BaseFormatter as a superclass for Formatter objects to help define the above, plus whatever else it means to be an ObjectIdentifier Formatter.
+
 ### 0.6.0 - 2023-01-09
 - Internal refactoring for more Object-Oriented goodness.
 

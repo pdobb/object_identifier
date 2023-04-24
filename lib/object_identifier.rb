@@ -18,7 +18,7 @@ module ObjectIdentifier
         attributes: attributes,
         formatter_options: formatter_options)
 
-    formatter_class.(objects, parameters)
+    formatter_class.(objects, parameters: parameters)
   end
 
   # Default Configuration Accessors
