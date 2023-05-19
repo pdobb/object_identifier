@@ -1,3 +1,7 @@
+require:
+  - rubocop-rake
+  - rubocop-minitest
+
 AllCops:
   UseCache: true
   DisplayCopNames: true
@@ -5,6 +9,9 @@ AllCops:
   ExtraDetails: false
   TargetRubyVersion: 2.4.0
   NewCops: enable
+
+Gemspec/DevelopmentDependencies:
+  EnforcedStyle: gemspec # See: https://bundler.io/guides/creating_gem.html#testing-our-gem
 
 Layout/DotPosition:
   EnforcedStyle: trailing
@@ -63,8 +70,9 @@ Lint/Void:
 
 Metrics/BlockLength:
   AllowedMethods:
-    - describe
-    - context
+    - new
+    - describe # Tests
+    - context # Tests
     - ips # Benchmarking
 
 Metrics/ClassLength:
@@ -99,7 +107,7 @@ Style/EmptyMethod:
 
 Style/ExpandPathArguments:
   Exclude:
-    - "object_inspector.gemspec"
+    - "object_identifier.gemspec"
 
 Style/FormatString:
   Enabled: false # % notation with an Array just reads better sometimes.
@@ -110,6 +118,9 @@ Style/Lambda:
 Style/LambdaCall:
   Enabled: false # Allow ServiceObject.(*). Only use on classes, not instances.
 
+Style/NumericPredicate:
+  AutoCorrect: true
+
 Style/OpenStructUse:
   Exclude:
     - "test/**/*"
@@ -119,6 +130,12 @@ Style/RegexpLiteral:
 
 Style/RescueStandardError:
   EnforcedStyle: implicit
+
+Style/ReturnNil:
+  Enabled: true
+
+Style/StringMethods:
+  Enabled: true
 
 Style/SingleLineMethods:
   Exclude:
