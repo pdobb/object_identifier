@@ -26,24 +26,26 @@ def parameterize(attributes = [], **formatter_options)
     formatter_options: formatter_options)
 end
 
-puts "== Averaged ============================================================="
+puts "== Averaged ===================================================================="
 Benchmark.ips { |x|
   formatter_klasses.each do |formatter_klass|
     x.report(formatter_klass) {
       formatter_klass.new(objects[0]).call
-      formatter_klass.new(objects[0], parameterize(%i[id name])).call
-      formatter_klass.new(objects[0], parameterize(klass: "CustomClass")).call
-      formatter_klass.new(objects[0], parameterize(%i[id name], klass: "CustomClass")).call
-      formatter_klass.new(objects, parameterize(limit: 2)).call
-      formatter_klass.new(objects, parameterize(%i[id name], klass: "CustomClass", limit: 2)).call
+      formatter_klass.new(objects[0], parameters: parameterize(%i[id name])).call
+      formatter_klass.new(objects[0], parameters: parameterize(klass: "CustomClass")).call
+      formatter_klass.new(objects[0], parameters: parameterize(%i[id name], klass: "CustomClass")).call
+      formatter_klass.new(objects, parameters: parameterize(limit: 2)).call
+      formatter_klass.new(objects, parameters: parameterize(%i[id name], klass: "CustomClass", limit: 2)).call
     }
   end
 
   x.compare!
 }
-puts "== Done"
+puts(
+  "== Done ========================================================================",
+  "\n")
 
-puts "== Individualized ======================================================="
+puts "== Individualized =============================================================="
 Benchmark.ips { |x|
   # rubocop:disable Style/CombinableLoops
   formatter_klasses.each do |formatter_klass|
@@ -53,31 +55,48 @@ Benchmark.ips { |x|
   end
   formatter_klasses.each do |formatter_klass|
     x.report("#{formatter_klass} - Custom Attributes") {
-      formatter_klass.new(objects[0], parameterize(%i[id name])).call
+      formatter_klass.new(
+        objects[0],
+        parameters: parameterize(%i[id name])).
+        call
     }
   end
   formatter_klasses.each do |formatter_klass|
     x.report("#{formatter_klass} - Custom Class") {
-      formatter_klass.new(objects[0], parameterize(klass: "CustomClass")).call
+      formatter_klass.new(
+        objects[0],
+        parameters: parameterize(klass: "CustomClass")).
+        call
     }
   end
   formatter_klasses.each do |formatter_klass|
     x.report("#{formatter_klass} - Custom Attributes & Custom Class") {
-      formatter_klass.new(objects[0], parameterize(%i[id name], klass: "CustomClass")).call
+      formatter_klass.new(
+        objects[0],
+        parameters: parameterize(%i[id name], klass: "CustomClass")).
+        call
     }
   end
   formatter_klasses.each do |formatter_klass|
     x.report("#{formatter_klass} - Limit 2") {
-      formatter_klass.new(objects, parameterize(limit: 2)).call
+      formatter_klass.new(
+        objects,
+        parameters: parameterize(limit: 2)).
+        call
     }
   end
   formatter_klasses.each do |formatter_klass|
     x.report("#{formatter_klass} - Custom Attributes & Custom Class & Limit 2") {
-      formatter_klass.new(objects, parameterize(%i[id name], klass: "CustomClass", limit: 2)).call
+      formatter_klass.new(
+        objects,
+        parameters: parameterize(%i[id name], klass: "CustomClass", limit: 2)).
+        call
     }
   end
   # rubocop:enable Style/CombinableLoops
 
   x.compare!
 }
-puts "== Done"
+puts(
+  "== Done ========================================================================",
+  "\n")
