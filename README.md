@@ -38,13 +38,12 @@ Or install it yourself as:
 ## Compatibility
 
 Tested MRI Ruby Versions:
-* 2.4 (not recently tested)
-* 2.5 (not recently tested)
-* 2.6 (not recently tested)
 * 2.7
+* 3.0
 * 3.1
 * 3.2
 
+ObjectIdentifier has no other dependencies.
 
 ## Configuration
 
