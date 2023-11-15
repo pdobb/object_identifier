@@ -1,37 +1,30 @@
 # frozen_string_literal: true
 
+# See ./rakelib/ for additional tasks automatically loaded by rake.
+
 require "bundler/gem_tasks"
-require "rake/testtask"
-
-Rake::TestTask.new(:test) do |t|
-  t.libs << "test"
-  t.libs << "lib"
-  t.test_files = FileList["test/**/*_test.rb"]
-end
-
-require "rubocop/rake_task"
-
-RuboCop::RakeTask.new do |t|
-  t.fail_on_error = false
-end
-
-require "reek/rake/task"
-
-Reek::Rake::Task.new do |t|
-  t.fail_on_error = false
-end
 
 task :default do
-  tasks = %i[
+  run_tasks(%i[
     test
     rubocop
     reek
-  ]
+    yard
+  ])
+end
 
+def run_tasks(tasks)
   tasks.each_with_index do |name, index|
-    puts "== Running #{name} #{"=" * (70 - name.size)}\n"
-    Rake::Task[name].invoke
-    puts "== Done #{"=" * 74}"
+    annotate_run(name) do
+      Rake::Task[name].invoke
+    end
+
     puts unless index.next == tasks.size
   end
+end
+
+def annotate_run(name)
+  puts "= Running #{name} #{"=" * (71 - name.size)}\n"
+  yield
+  puts "= Done #{"=" * 75}"
 end
