@@ -5,8 +5,9 @@ class ObjectIdentifier::BaseFormatter
   attr_reader :objects,
               :parameters
 
-  def self.call(*args, **kwargs)
-    new(*args, **kwargs).call
+  # A shortcut for calling `new(...).call`.
+  def self.call(...)
+    new(...).call
   end
 
   # @param objects [Object, [Object, ...]] the object(s) to be interrogated for

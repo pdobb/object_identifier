@@ -4,6 +4,7 @@
 # formatter options that may be needed for custom formatting during object
 # identification.
 class ObjectIdentifier::Parameters
+  # This String to display if `formatter_options[:klass]` isn't present.
   KLASS_NOT_GIVEN = "NOT_GIVEN"
 
   attr_reader :attributes
@@ -23,9 +24,9 @@ class ObjectIdentifier::Parameters
 
   # @param attributes [Array, *args] a list of method calls to interrogate the
   #   given object(s) with
-  # @param formatter_options[:limit] [Integer, nil] (nil) a given limit on the
+  # @option formatter_options[:limit] [Integer, nil] (nil) a given limit on the
   #   number of objects to interrogate
-  # @param formatter_options[:klass] [#to_s] a preferred type name for
+  # @option formatter_options[:klass] [#to_s] a preferred type name for
   #   identifying the given object(s) as
   def initialize(
         attributes: [],

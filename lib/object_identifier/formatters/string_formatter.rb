@@ -3,6 +3,7 @@
 # ObjectIdentifier::StringFormatter builds a String to identify the
 # given object(s).
 class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
+  # The String to output when the {#objects} is empty.
   NO_OBJECTS_INDICATOR = "[no objects]"
 
   # Output the self-identifying string for the given object(s). Will either
@@ -45,6 +46,10 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
       @parameters = parameters
     end
 
+    # Build a comma-separated list of formatted item Strings representing the
+    # given objects.
+    #
+    # @return [String]
     def call
       parts = objects.first(limit).map { |obj| format_item(obj) }
       parts << "... (#{truncated_objects_count} more)" if truncated?

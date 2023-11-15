@@ -23,24 +23,30 @@ module ObjectIdentifier
 
   # Default Configuration Accessors
 
+  # The default formatter class to use ({ObjectIdentifier::StringFormatter}).
   def self.default_formatter_class
     configuration.formatter_class
   end
 
+  # The default attributes to include on object inspections.
   def self.default_attributes
     configuration.default_attributes
   end
 
   # Custom Configuration Getters/Setters
 
+  # Accessor for the {ObjectIdentifier::Configuration} object.
   def self.configuration
     @configuration ||= Configuration.new
   end
 
+  # @yieldparam configuration [ObjectIdentifier::Configuration]
   def self.configure
     yield(configuration)
   end
 
+  # Reset the current configuration settings memoized by
+  # {ObjectIdentifier.configuration}.
   def self.reset_configuration
     @configuration = Configuration.new
   end
