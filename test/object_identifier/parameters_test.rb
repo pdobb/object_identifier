@@ -30,7 +30,7 @@ class ObjectIdentifier::ParametersTest < Minitest::Spec
           {
             limit: 9,
             klass: CustomFormatter,
-            unknown_key: "THIS KEY SHOULD BE IGNORED"
+            unknown_key: "THIS KEY SHOULD BE IGNORED",
           }
         }
 

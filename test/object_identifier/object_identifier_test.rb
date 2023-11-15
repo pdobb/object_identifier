@@ -48,7 +48,7 @@ class ObjectIdentifierTest < Minitest::Spec
           value(@default_formatter_class_called).must_equal(true)
           value(@parameters_build_call.kargs).must_equal({
             attributes: [],
-            formatter_options: {}
+            formatter_options: {},
           })
         end
       end
@@ -73,7 +73,7 @@ class ObjectIdentifierTest < Minitest::Spec
           value(@parameters_build_call.kargs).must_equal(
             {
               attributes: custom_attributes,
-              formatter_options: custom_formatter_options
+              formatter_options: custom_formatter_options,
             })
         end
       end

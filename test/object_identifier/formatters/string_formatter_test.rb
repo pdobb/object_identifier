@@ -15,7 +15,7 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
           parameters:
             ObjectIdentifier::Parameters.build(
               attributes: attributes,
-              formatter_options: formatter_options)
+              formatter_options: formatter_options),
         }
       end
 

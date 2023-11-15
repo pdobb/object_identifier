@@ -1,37 +1,40 @@
 # frozen_string_literal: true
 
-lib = File.expand_path("lib", __dir__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "object_identifier/version"
+require_relative "lib/object_identifier/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "object_identifier"
-  spec.version       = ObjectIdentifier::VERSION
-  spec.authors       = ["Paul DobbinSchmaltz"]
-  spec.email         = ["p.dobbinschmaltz@icloud.com"]
-  spec.required_ruby_version = ">= 2.4.0"
-  spec.metadata      = { "rubygems_mfa_required" => "true" }
+  spec.name = "object_identifier"
+  spec.version = ObjectIdentifier::VERSION
+  spec.authors = ["Paul DobbinSchmaltz"]
+  spec.email = ["p.dobbinschmaltz@icloud.com"]
 
-  spec.summary       = "ObjectIdentifier identifies an object by its class name and attributes."
-  spec.description   = "Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. It is great for logging, sending descriptive notification messages, etc."
-  spec.homepage      = "https://github.com/pdobb/object_identifier"
-  spec.license       = "MIT"
+  spec.summary = "ObjectIdentifier identifies an object by its class name and attributes."
+  spec.description = "Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. It is great for logging, sending descriptive notification messages, etc."
+  spec.homepage = "https://github.com/pdobb/object_identifier"
+  spec.license = "MIT"
+  spec.required_ruby_version = ">= 2.7"
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  # if spec.respond_to?(:metadata)
-  #   spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-  # else
-  #   raise "RubyGems 2.0 or newer is required to protect against " \
-  #     "public gem pushes."
-  # end
+  # spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.metadata = {
+    "bug_tracker_uri" => "https://github.com/pdobb/object_identifier/issues",
+    "changelog_uri" => "https://github.com/pdobb/object_identifier/releases",
+    "source_code_uri" => "https://github.com/pdobb/object_identifier",
+    "homepage_uri" => spec.homepage,
+    "rubygems_mfa_required" => "true",
+  }
+
+  # Specify which files should be added to the gem when it is released.
+  spec.files = Dir.glob(%w[LICENSE.txt README.md {exe,lib}/**/*]).reject { |f| File.directory?(f) }
+  spec.bindir = "exe"
+  spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+
+  # Uncomment to register a new dependency of your gem
+  # spec.add_dependency "example-gem", "~> 1.0"
+
+  # For more information and examples about making a new gem, check out our
+  # guide at: https://bundler.io/guides/creating_gem.html
 
   spec.add_development_dependency "benchmark-ips"
   spec.add_development_dependency "bundler"
