@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Paul DobbinSchmaltz"]
   spec.email = ["p.dobbinschmaltz@icloud.com"]
 
-  spec.summary = "ObjectIdentifier identifies an object by its class name and attributes."
+  spec.summary = "Object Identifier identifies an object by its class name and attributes."
   spec.description = "Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. It is great for logging, sending descriptive notification messages, etc."
   spec.homepage = "https://github.com/pdobb/object_identifier"
   spec.license = "MIT"

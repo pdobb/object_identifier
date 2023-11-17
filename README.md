@@ -43,11 +43,11 @@ Tested MRI Ruby Versions:
 * 3.1
 * 3.2
 
-ObjectIdentifier has no other dependencies.
+Object Identifier has no other dependencies.
 
 ## Configuration
 
-Global/default values for ObjectIdentifier can be configured via the ObjectIdentifier::Configuration object.
+Global/default values for Object Identifier can be configured via the ObjectIdentifier::Configuration object.
 
 _Note: In a Rails app, the following would go in e.g. `config/initializers/object_identifier.rb`_
 
@@ -164,7 +164,7 @@ OpenStruct.new(my_value: my_value_object).identify(:my_value)
 
 ## Supporting Gems
 
-ObjectIdentifier works great with the [ObjectInspector](https://github.com/pdobb/object_inspector) gem.
+Object Identifier works great with the [Object Inspector](https://github.com/pdobb/object_inspector) gem.
 
 
 ### Benchmarking Formatters
@@ -186,11 +186,21 @@ play scripts/benchmarking/formatters.rb
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. Or, run `rake` to run the tests plus linters as well as `yard` (to confirm proper YARD documentation practices). You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
-To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To release a new version, update the version number in `version.rb`, bump the latest ruby target versions etc. with `rake bump`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+
+### Documentation
+
+[YARD documentation](https://yardoc.org/index.html) can be generated and viewed live:
+1. Install YARD: `gem install yard`
+2. Run the YARD server: `yard server --reload`
+3. Open the live documentation site: `open http://localhost:8808`
+
+While the YARD server is running, documentation in the live site will be auto-updated on source code save (and site reload).
 
 
 ## Contributing
