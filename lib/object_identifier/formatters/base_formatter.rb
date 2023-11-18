@@ -10,8 +10,8 @@ class ObjectIdentifier::BaseFormatter
     new(...).call
   end
 
-  # @param objects [Object, [Object, ...]] the object(s) to be interrogated for
-  #   String values to be added to the output String
+  # @param objects [Object, [Object, ...]] The object(s) to be interrogated for
+  #   String values to be added to the output String.
   # @param parameters [ObjectIdentifier::Parameters]
   def initialize(objects, parameters: ObjectIdentifier::Parameters.build)
     @objects = ObjectIdentifier::ArrayWrap.(objects)

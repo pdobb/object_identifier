@@ -22,12 +22,12 @@ class ObjectIdentifier::Parameters
       formatter_options: formatter_options.to_h)
   end
 
-  # @param attributes [Array, *args] a list of method calls to interrogate the
-  #   given object(s) with
-  # @option formatter_options[:limit] [Integer, nil] (nil) a given limit on the
-  #   number of objects to interrogate
-  # @option formatter_options[:klass] [#to_s] a preferred type name for
-  #   identifying the given object(s) as
+  # @param attributes [Array, *args] A list of method calls to interrogate the
+  #   given object(s) with.
+  # @option formatter_options[:limit] [Integer, nil] A given limit on the number
+  #   of objects to interrogate.
+  # @option formatter_options[:klass] [#to_s] A preferred type name for
+  #   identifying the given object(s) as.
   def initialize(
         attributes: [],
         formatter_options: {})

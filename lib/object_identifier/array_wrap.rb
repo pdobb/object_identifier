@@ -7,6 +7,10 @@
 class ObjectIdentifier::ArrayWrap
   # :reek:NilCheck
   # :reek:ManualDispatch
+
+  # Dispatch "Array Wrapping" logic on the given `object`.
+  #
+  # @param object The object(s) to attempt to Array wrap.
   def self.call(object)
     if object.nil?
       []

@@ -3,14 +3,14 @@
 # ObjectIdentifier::StringFormatter builds a String to identify the
 # given object(s).
 class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
-  # The String to output when the {#objects} is empty.
+  # The String to output when {#objects} is empty.
   NO_OBJECTS_INDICATOR = "[no objects]"
 
   # Output the self-identifying string for the given object(s). Will either
   # return a single object representation or a list of object
   # representations, based on the number of objects we're identifying.
   #
-  # @return [String] a string that identifies the object(s)
+  # @return [String] A string that identifies the object(s).
   def call
     if objects.none?
       NO_OBJECTS_INDICATOR
@@ -85,15 +85,15 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     attr_reader :object,
                 :parameters
 
-    # @param object [Object] the object to be interrogated for String values to
-    #   be added to the output String
+    # @param object [Object] The object to be interrogated for String values to
+    #   be added to the output String.
     # @param parameters [ObjectIdentifier::Parameters]
     def initialize(object, parameters)
       @object = object
       @parameters = parameters
     end
 
-    # @return [String] the self-identifying String for {object}.
+    # @return [String] The self-identifying String for {#object}.
     def call
       return NO_OBJECTS_INDICATOR if blank?
 
@@ -102,8 +102,9 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
 
     private
 
-    # Simple version of Rails' Object#blank? method.
     # :reek:NilCheck
+
+    # Simple version of Rails' Object#blank? method.
     def blank?
       object.nil? || object == [] || object == {}
     end
@@ -117,6 +118,7 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     end
 
     # :reek:DuplicateMethodCall
+
     def attributes_formatter
       @attributes_formatter ||=
         if attributes_hash.one?
@@ -126,8 +128,9 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
         end
     end
 
-    # @return [Hash]
     # :reek:ManualDispatch
+
+    # @return [Hash]
     def attributes_hash
       @attributes_hash ||=
         attributes.each_with_object({}) { |key, acc|

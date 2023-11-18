@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-# ObjectIdentifier is the base namespace for all modules/classes related to the
-# object_identifier gem.
+# ObjectIdentifier is the top-level namespace/module for this gem.
 module ObjectIdentifier
+  # :reek:LongParameterList
+
   # ObjectIdentifier.call is the main entry point for use of this gem. In
   # typical usage, however, this method will almost exclusively just be called
   # by {Object#identify}, as defined in lib/core_ext/object.rb.
-  # :reek:LongParameterList
   def self.call(
         objects,
         *attributes,
@@ -80,8 +80,14 @@ end
 require "object_identifier/version"
 require "object_identifier/array_wrap"
 require "object_identifier/parameters"
+
+# FORMATTERS
+
 require "object_identifier/formatters/base_formatter"
 require "object_identifier/formatters/string_formatter"
+
+# CORE EXTENSIONS
+
 require "core_ext/object"
 require "core_ext/string"
 require "core_ext/symbol"
