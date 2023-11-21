@@ -169,14 +169,14 @@ Object Identifier works great with the [Object Inspector](https://github.com/pdo
 
 ### Benchmarking Formatters
 
-Performance of Formatters can be tested by playing the [Formatters Benchmarking Scripts](https://github.com/pdobb/object_identifier/blob/master/scripts/benchmarking/formatters.rb) in the pry console for this gem.
+Performance of Formatters can be tested by playing the [Formatters Benchmarking Scripts](https://github.com/pdobb/object_identifier/blob/master/script/benchmarking/formatters.rb) in the pry console for this gem.
 
 Custom Formatters may be similarly gauged for comparison by adding them to the `custom_formatter_klasses` array before playing the script.
 
 ```ruby
 custom_formatter_klasses = [MyCustomFormatter]
 
-play scripts/benchmarking/formatters.rb
+play script/benchmarking/formatters.rb
 # ObjectIdentifier::StringFormatter
 #     58.478k (± 0.8%) i/s -    295.776k in   5.058178s
 # MyCustomFormatter

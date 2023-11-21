@@ -4,7 +4,7 @@ directories:
       enabled: false
     UtilityFunction:
       enabled: false
-  "scripts":
+  "script":
     IrresponsibleModule:
       enabled: false
     UtilityFunction:
