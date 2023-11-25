@@ -1,2 +1,11 @@
+# Load Rubocop plugins.
+require:
+  - rubocop-rake
+  - rubocop-minitest
+  - rubocop-performance
+
 inherit_gem:
-  pdobb-style: .rubocop.yml
+  gemwork: lib/rubocop/.rubocop.yml
+
+AllCops:
+  TargetRubyVersion: 2.7

@@ -4,9 +4,7 @@
 /coverage/
 /doc/
 /pkg/
-/spec/reports/
 /tmp/
-.byebug_history
-*.gem
+
 .DS_Store
 /.vscode
