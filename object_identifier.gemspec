@@ -14,8 +14,6 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.7"
 
-  # spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
-
   spec.metadata = {
     "bug_tracker_uri" => "https://github.com/pdobb/object_identifier/issues",
     "changelog_uri" => "https://github.com/pdobb/object_identifier/releases",
@@ -30,18 +28,8 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Uncomment to register a new dependency of your gem
-  # spec.add_dependency "example-gem", "~> 1.0"
-
-  # For more information and examples about making a new gem, check out our
-  # guide at: https://bundler.io/guides/creating_gem.html
-
   spec.add_development_dependency "benchmark-ips"
-  spec.add_development_dependency "bundler"
-  spec.add_development_dependency "byebug"
   spec.add_development_dependency "gemwork"
-  spec.add_development_dependency "pry"
-  spec.add_development_dependency "pry-byebug"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "solargraph"
 end

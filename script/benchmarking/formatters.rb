@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Play from the pry console with:
-#   play script/benchmarking/formatters.rb
+# Play from the IRB console with:
+#   load "script/benchmarking/formatters.rb"
 
 require "benchmark/ips"
 
