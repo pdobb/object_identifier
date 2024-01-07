@@ -2,8 +2,8 @@
 
 require "test_helper"
 
-class ObjectIdentifierTest < Minitest::Spec
-  # ObjectIdentifierTest::CustomFormatter is a Test Double.
+class ConfigurationTest < Minitest::Spec
+  # ConfigurationTest::CustomFormatter is a Test Double.
   class CustomFormatter < ObjectIdentifier::BaseFormatter
     def call(*)
       "FAKE_CALL_RESULT"
