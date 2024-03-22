@@ -4,7 +4,7 @@
 # Array.wrap method. This allows us to get around objects that respond to
 # `to_a` (such as Struct) and, instead, either utilize `to_ary` or just
 # actually wrap the object in an Array ourselves.
-class ObjectIdentifier::ArrayWrap
+module ObjectIdentifier::ArrayWrap
   # :reek:NilCheck
   # :reek:ManualDispatch
 

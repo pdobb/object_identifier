@@ -5,7 +5,10 @@ require:
   - rubocop-performance
 
 inherit_gem:
-  gemwork: lib/rubocop/.rubocop.yml
+  gemwork: lib/rubocop/.rubocop-gems.yml
 
 AllCops:
   TargetRubyVersion: 2.7
+
+Performance/OpenStruct:
+  Enabled: false # Reconsider later.

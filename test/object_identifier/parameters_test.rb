@@ -4,7 +4,7 @@ require "test_helper"
 
 class ObjectIdentifier::ParametersTest < Minitest::Spec
   # ObjectIdentifier::ParametersTest::CustomFormatter is a Test Dummy.
-  class CustomFormatter
+  module CustomFormatter
     def self.call(*)
     end
   end

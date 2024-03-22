@@ -51,7 +51,7 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     #
     # @return [String]
     def call
-      parts = objects.first(limit).map { |obj| format_item(obj) }
+      parts = objects.first(limit).map! { |obj| format_item(obj) }
       parts << "... (#{truncated_objects_count} more)" if truncated?
       parts.join(", ")
     end
