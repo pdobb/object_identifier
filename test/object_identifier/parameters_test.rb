@@ -19,9 +19,9 @@ class ObjectIdentifier::ParametersTest < Minitest::Spec
         subject { unit_class.new }
 
         it "sets sensible defaults, GIVEN" do
-          value(subject.attributes).must_equal([])
-          value(subject.limit).must_be_nil
-          value(subject.klass).must_be_nil
+          _(subject.attributes).must_equal([])
+          _(subject.limit).must_be_nil
+          _(subject.klass).must_be_nil
         end
       end
 
@@ -42,9 +42,9 @@ class ObjectIdentifier::ParametersTest < Minitest::Spec
 
         it "stores the expected values for the passed in options while "\
            "ignoring unknown keys" do
-          value(subject.attributes).must_equal(custom_attributes)
-          value(subject.limit).must_equal(formatter_options.fetch(:limit))
-          value(subject.klass).must_equal(formatter_options.fetch(:klass).to_s)
+          _(subject.attributes).must_equal(custom_attributes)
+          _(subject.limit).must_equal(formatter_options.fetch(:limit))
+          _(subject.klass).must_equal(formatter_options.fetch(:klass).to_s)
         end
       end
     end
@@ -54,13 +54,12 @@ class ObjectIdentifier::ParametersTest < Minitest::Spec
         subject { unit_class.new }
 
         it "returns nil" do
-          value(subject.limit).must_be_nil
+          _(subject.limit).must_be_nil
         end
 
         context "GIVEN a block" do
           it "returns the result of the block" do
-            value(subject.limit { "BLOCK_RESULT" }).must_equal(
-              "BLOCK_RESULT")
+            _(subject.limit { "BLOCK_RESULT" }).must_equal("BLOCK_RESULT")
           end
         end
       end
@@ -74,7 +73,7 @@ class ObjectIdentifier::ParametersTest < Minitest::Spec
         subject { unit_class.new(formatter_options: { klass: klass }) }
 
         it "returns the given value as a String" do
-          value(subject.klass).must_equal(target_class.to_s)
+          _(subject.klass).must_equal(target_class.to_s)
         end
       end
 
@@ -82,18 +81,17 @@ class ObjectIdentifier::ParametersTest < Minitest::Spec
         subject { unit_class.new }
 
         it "returns nil" do
-          value(subject.klass).must_be_nil
+          _(subject.klass).must_be_nil
         end
 
         context "GIVEN a block" do
           it "returns the result of the block" do
-            value(subject.klass { target_class }).must_equal(
-              target_class.to_s)
+            _(subject.klass { target_class }).must_equal(target_class.to_s)
           end
 
           context "GIVEN a constant or a String result from the block" do
             it "returns the given value as a String" do
-              value(subject.klass { klass }).must_equal(target_class.to_s)
+              _(subject.klass { klass }).must_equal(target_class.to_s)
             end
           end
         end

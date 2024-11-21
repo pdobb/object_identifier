@@ -19,9 +19,9 @@ class ObjectIdentifier::BaseFormatterTest < Minitest::Spec
 
       it "forwards to #call" do
         result = subject.call(1, parameters: [2])
-        value(@object_identifier_base_formatter_called_with).must_equal(
+        _(@object_identifier_base_formatter_called_with).must_equal(
           [1, { parameters: [2] }])
-        value(result).must_equal("FAKE_CALL_RESULT")
+        _(result).must_equal("FAKE_CALL_RESULT")
       end
     end
 
@@ -29,7 +29,7 @@ class ObjectIdentifier::BaseFormatterTest < Minitest::Spec
       subject { ObjectIdentifier::BaseFormatter.new(1, parameters: [2]) }
 
       it "raises NotImplementedError" do
-        value(-> { subject.call }).must_raise(NotImplementedError)
+        _(-> { subject.call }).must_raise(NotImplementedError)
       end
     end
   end

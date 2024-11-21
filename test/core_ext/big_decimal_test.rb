@@ -8,7 +8,7 @@ class BigDecimalTest < Minitest::Spec
       it "returns the same as #to_s" do
         [1, 1.0, 0, 99.9999].each do |val|
           bd_val = BigDecimal(val, 10)
-          value(bd_val.inspect_lit).must_equal("<BD:#{bd_val}>")
+          _(bd_val.inspect_lit).must_equal("<BD:#{bd_val}>")
         end
       end
     end

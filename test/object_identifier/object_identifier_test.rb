@@ -22,7 +22,7 @@ class ObjectIdentifierTest < Minitest::Spec
     subject { unit_class }
 
     it "has a VERSION" do
-      value(unit_class::VERSION).wont_be_nil
+      _(unit_class::VERSION).wont_be_nil
     end
 
     describe ".call" do
@@ -41,10 +41,10 @@ class ObjectIdentifierTest < Minitest::Spec
 
         it "calls the default formatter + attributes" do
           result = subject.call(objects)
-          value(result).must_be_instance_of(String)
+          _(result).must_be_instance_of(String)
 
-          value(@default_formatter_class_called).must_equal(true)
-          value(@parameters_build_call.kargs).must_equal({
+          _(@default_formatter_class_called).must_equal(true)
+          _(@parameters_build_call.kargs).must_equal({
             attributes: [],
             formatter_options: {},
           })
@@ -65,10 +65,10 @@ class ObjectIdentifierTest < Minitest::Spec
               custom_attributes,
               formatter_class: custom_formatter_class,
               **custom_formatter_options)
-          value(result).must_equal("FAKE_CALL_RESULT")
+          _(result).must_equal("FAKE_CALL_RESULT")
 
-          value(@custom_formatter_class_called).must_equal(true)
-          value(@parameters_build_call.kargs).must_equal(
+          _(@custom_formatter_class_called).must_equal(true)
+          _(@parameters_build_call.kargs).must_equal(
             {
               attributes: custom_attributes,
               formatter_options: custom_formatter_options,

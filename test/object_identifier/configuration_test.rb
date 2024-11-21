@@ -25,8 +25,7 @@ class ConfigurationTest < Minitest::Spec
       subject { unit_class }
 
       it "returns the expected constant" do
-        value(subject.default_formatter_class).must_equal(
-          default_formatter_class)
+        _(subject.default_formatter_class).must_equal(default_formatter_class)
       end
     end
 
@@ -34,7 +33,7 @@ class ConfigurationTest < Minitest::Spec
       subject { unit_class }
 
       it "returns the expected constant" do
-        value(subject.default_attributes).must_equal(default_attributes)
+        _(subject.default_attributes).must_equal(default_attributes)
       end
     end
 
@@ -42,14 +41,14 @@ class ConfigurationTest < Minitest::Spec
       subject { unit_class }
 
       it "returns an ObjectInspector::Configuration object" do
-        value(subject.configuration).must_be_kind_of(configuration_unit_class)
+        _(subject.configuration).must_be_kind_of(configuration_unit_class)
       end
 
       it "contains the expected default values" do
         configuration = subject.configuration
 
-        value(configuration.formatter_class).must_equal(default_formatter_class)
-        value(configuration.default_attributes).must_equal(default_attributes)
+        _(configuration.formatter_class).must_equal(default_formatter_class)
+        _(configuration.default_attributes).must_equal(default_attributes)
       end
     end
 
@@ -69,10 +68,8 @@ class ConfigurationTest < Minitest::Spec
         it "sets custom configuration and converts values to Strings" do
           configuration = subject.configuration
 
-          value(configuration.formatter_class).must_equal(
-            custom_formatter_class)
-          value(configuration.default_attributes).must_equal(
-            custom_attributes)
+          _(configuration.formatter_class).must_equal(custom_formatter_class)
+          _(configuration.default_attributes).must_equal(custom_attributes)
         end
       end
     end
@@ -83,9 +80,8 @@ class ConfigurationTest < Minitest::Spec
       it "resets the Configuration to the expected default values" do
         configuration = subject.configuration
 
-        value(configuration.formatter_class).must_equal(default_formatter_class)
-        value(configuration.default_attributes).must_equal(
-          default_attributes)
+        _(configuration.formatter_class).must_equal(default_formatter_class)
+        _(configuration.default_attributes).must_equal(default_attributes)
       end
     end
 
@@ -96,13 +92,13 @@ class ConfigurationTest < Minitest::Spec
         context "GIVEN a Class constant" do
           it "sets the value as expected" do
             subject.formatter_class = custom_formatter_class
-            value(subject.formatter_class).must_equal(custom_formatter_class)
+            _(subject.formatter_class).must_equal(custom_formatter_class)
           end
         end
 
         context "GIVEN a String" do
           it "raises TypeError" do
-            value(-> { subject.formatter_class = "STRING" }).must_raise(
+            _(-> { subject.formatter_class = "STRING" }).must_raise(
               TypeError)
           end
         end

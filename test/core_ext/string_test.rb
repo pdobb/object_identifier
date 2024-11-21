@@ -6,7 +6,7 @@ class StringTest < Minitest::Spec
   describe String do
     describe "#inspect_lit" do
       it "quotes string values" do
-        value("string".inspect_lit).must_equal(%("string"))
+        _("string".inspect_lit).must_equal(%("string"))
       end
     end
   end

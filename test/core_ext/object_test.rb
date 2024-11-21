@@ -16,7 +16,7 @@ class ObjectTest < Minitest::Spec
       it "calls inspect on self" do
         subject.inspect_lit
 
-        value(@object_inspect_call.args).must_equal([])
+        _(@object_inspect_call.args).must_equal([])
       end
     end
 
@@ -30,7 +30,7 @@ class ObjectTest < Minitest::Spec
       it "calls ObjectIdentifier, passing self along" do
         subject.identify
 
-        value(@object_identifier_identifier_call.pargs).must_equal([subject])
+        _(@object_identifier_identifier_call.pargs).must_equal([subject])
       end
 
       it "also passes along args and kwargs when given" do
@@ -39,9 +39,9 @@ class ObjectTest < Minitest::Spec
 
         subject.identify(attributes, **options)
 
-        value(@object_identifier_identifier_call.pargs).
-          must_equal([subject, attributes])
-        value(@object_identifier_identifier_call.kargs).must_equal(options)
+        _(@object_identifier_identifier_call.pargs).must_equal(
+          [subject, attributes])
+        _(@object_identifier_identifier_call.kargs).must_equal(options)
       end
     end
   end
