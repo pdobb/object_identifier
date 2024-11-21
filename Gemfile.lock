@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    object_identifier (0.7.0)
+    object_identifier (0.8.0)
 
 GEM
   remote: https://rubygems.org/
