@@ -191,7 +191,7 @@ To install this gem onto your local machine, run `bundle exec rake install`.
 
 ### Testing
 
-To test this gem (gemwork):
+To test this gem:
 
 ```bash
 rake
@@ -210,7 +210,7 @@ npx prettier . --write
 
 ### Releases
 
-To release a new version of Gemwork to RubyGems:
+To release a new version of this gem to RubyGems:
 
 1. Update the version number in `version.rb`
 2. Update `CHANGELOG.md`
