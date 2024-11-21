@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = "Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. It is great for logging, sending descriptive notification messages, etc."
   spec.homepage = "https://github.com/pdobb/object_identifier"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.7"
+  spec.required_ruby_version = ">= 3.1"
 
   spec.metadata = {
     "bug_tracker_uri" => "https://github.com/pdobb/object_identifier/issues",

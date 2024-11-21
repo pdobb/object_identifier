@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "ostruct"
 
 class ObjectIdentifier::StringFormatterTest < Minitest::Spec
   # ObjectIdentifier::StringFormatterTest::TestStruct is a Test Dummy.

@@ -12,12 +12,12 @@ formatter_klasses = [
   *Array(custom_formatter_klasses),
 ].freeze
 
-MyObject ||= Struct.new(:id, :name)
+MyObject = Struct.new(:id, :name)
 
 objects = [
-  MyObject.new(id: 1, name: "NAME1"),
-  MyObject.new(id: 2, name: "NAME2"),
-  MyObject.new(id: 3, name: "NAME3"),
+  MyObject.new({id: 1, name: "NAME1"}),
+  MyObject.new({id: 2, name: "NAME2"}),
+  MyObject.new({id: 3, name: "NAME3"}),
 ].freeze
 
 def parameterize(attributes = [], **formatter_options)

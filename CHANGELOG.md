@@ -1,3 +1,6 @@
+## [Unreleased]
+- Update minimum Ruby version from 2.7 -> 3.1
+
 ### 0.7.0 - 2023-11-21
 - Internal refactoring for more Object-Oriented goodness.
 - Internal refactoring for less brittle tests.
