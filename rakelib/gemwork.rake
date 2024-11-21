@@ -5,7 +5,7 @@ spec = Gem::Specification.find_by_name("gemwork")
 # Load additional tasks defined by Gemwork.
 Dir.glob(
   Pathname.new(spec.gem_dir).
-    join("lib", "tasks", "{util,rubocop,reek,test}.rake")) do |task|
+    join("lib", "tasks", "{util,rubocop,reek,test,prettier}.rake")) do |task|
   load(task)
 end
 
@@ -15,5 +15,6 @@ task :default do
     test
     rubocop
     reek
+    prettier
   ])
 end

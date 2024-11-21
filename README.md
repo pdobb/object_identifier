@@ -18,7 +18,6 @@ Which is the same as:
 "#{some_object.class.name}[id:#{some_object.id}, name:\"#{some_object.name}\"]"
 ```
 
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -35,13 +34,13 @@ Or install it yourself as:
 
     $ gem install object_identifier
 
-
 ## Compatibility
 
 Tested MRI Ruby Versions:
-* 3.1
-* 3.2
-* 3.3
+
+- 3.1
+- 3.2
+- 3.3
 
 Note: For Ruby 2.7 or 3.1 support, install object_identifier gem version 0.7.0.
 
@@ -64,7 +63,6 @@ ObjectIdentifier.configure do |config|
   config.default_attributes = %i[id]
 end
 ```
-
 
 ## Usage
 
@@ -128,14 +126,12 @@ The number of results that will be identified from a collection can be truncated
 # => Movie[id:1, name:"Pi"], ... (1 more)
 ```
 
-
 ### Empty Collections
 
 ```ruby
 [].identify  # => [no objects]
 {}.identify  # => [no objects]
 ```
-
 
 ## Custom Object Identifiers
 
@@ -167,11 +163,9 @@ OpenStruct.new(my_value: my_value_object).identify(:my_value)
 # => "OpenStruct[my_value:42 Meters]"
 ```
 
-
 ## Supporting Gems
 
 Object Identifier works great with the [Object Inspector](https://github.com/pdobb/object_inspector) gem.
-
 
 ### Benchmarking Formatters
 
@@ -189,30 +183,54 @@ load "script/benchmarking/formatters.rb"
 #                          ...
 ```
 
-
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. Or, run `rake` to run the tests plus linters as well as `yard` (to confirm proper YARD documentation practices). You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
-To release a new version, update the version number in `version.rb`, bump the latest ruby target versions etc. with `rake bump`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+### Testing
 
+To test this gem (gemwork):
+
+```bash
+rake
+```
+
+#### Linters
+
+```bash
+rubocop
+
+reek
+
+npx prettier . --check
+npx prettier . --write
+```
+
+### Releases
+
+To release a new version of Gemwork to RubyGems:
+
+1. Update the version number in `version.rb`
+2. Update `CHANGELOG.md`
+3. Run `bundle` to update Gemfile.lock with the latest version info
+4. Commit the changes. e.g. `Bump to vX.Y.Z`
+5. Run `rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ### Documentation
 
 [YARD documentation](https://yardoc.org/index.html) can be generated and viewed live:
+
 1. Install YARD: `gem install yard`
 2. Run the YARD server: `yard server --reload`
 3. Open the live documentation site: `open http://localhost:8808`
 
 While the YARD server is running, documentation in the live site will be auto-updated on source code save (and site reload).
 
-
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/pdobb/object_identifier.
-
 
 ## License
 
