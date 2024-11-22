@@ -44,7 +44,7 @@ GEM
       dry-inflector (~> 1.0)
       dry-logic (~> 1.4)
       zeitwerk (~> 2.6)
-    gemwork (0.7.1)
+    gemwork (0.7.2)
       debug
       irb
       minitest

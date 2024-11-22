@@ -68,7 +68,6 @@ module RubyVersions
   RUBY_VERSIONS_YAML_PATH =
     "https://raw.githubusercontent.com/ruby/www.ruby-lang.org/HEAD/_data/downloads.yml"
   VERSION_TYPES = %i[
-    eol
     security_maintenance
     stable
   ].freeze
