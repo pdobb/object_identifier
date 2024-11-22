@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Just use #inspect instead of #inspect_lit. Remove #inspect_lit from core extensions on: BigDecimal, Symbol, String, and Object.
+
 ### 0.8.0 - 2024-11-21
 
 - Update minimum Ruby version from 2.7 -> 3.1

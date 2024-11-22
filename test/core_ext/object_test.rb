@@ -6,20 +6,6 @@ class ObjectTest < Minitest::Spec
   describe Object do
     subject { Object.new }
 
-    describe "#inspect_lit" do
-      before do
-        MuchStub.on_call(subject, :inspect) { |call|
-          @object_inspect_call = call
-        }
-      end
-
-      it "calls inspect on self" do
-        subject.inspect_lit
-
-        _(@object_inspect_call.args).must_equal([])
-      end
-    end
-
     describe "#identify" do
       before do
         MuchStub.on_call(ObjectIdentifier, :call) { |call|

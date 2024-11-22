@@ -32,13 +32,13 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
         it "quotes symbols in attributes" do
           object = OpenStruct.new(name: "TestName", attr1: :value1)
           _(subject.call(object, **parameterize(:attr1))).must_equal(
-            %(OpenStruct[:"value1"]))
+            %(OpenStruct[:value1]))
         end
 
         it "ignores attributes that don't exist" do
           object = OpenStruct.new(name: "TestName", attr1: :value1)
           _(subject.call(object, **parameterize(%i[attr1 unknown_attr1]))).
-            must_equal(%(OpenStruct[:"value1"]))
+            must_equal(%(OpenStruct[:value1]))
         end
 
         it "returns the value of instance variables" do
@@ -75,7 +75,7 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
                 object, **parameterize(%i[name attr1 @var1]))
 
             expected_attributes_string =
-              %(name:"TestName", attr1::"value1", @var1:1)
+              %(name:"TestName", attr1::value1, @var1:1)
             _(result).must_equal("OpenStruct[#{expected_attributes_string}]")
           end
         end

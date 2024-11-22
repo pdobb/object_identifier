@@ -2,14 +2,6 @@
 
 # Reopen the core Object class to add {#identify} to all objects.
 class Object
-  # Standard #inspect for any object that doesn't override this method. This
-  # method is meant to make an object's type inherently obvious inspected.
-  #
-  # @return [String] a String-literal representation of this object
-  def inspect_lit
-    inspect
-  end
-
   # Instance method for constructing a self-identifying string for any given
   # object or list of objects.
   #

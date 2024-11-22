@@ -18,6 +18,3 @@ require "object_identifier/formatters/string_formatter"
 # CORE EXTENSIONS
 
 require "core_ext/object"
-require "core_ext/string"
-require "core_ext/symbol"
-require "core_ext/big_decimal"

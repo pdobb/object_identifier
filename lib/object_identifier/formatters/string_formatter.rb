@@ -23,12 +23,12 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
 
   private
 
-  def format_collection
-    Collection.new(objects, parameters).call
-  end
-
   def format_item(object = objects.first)
     Item.new(object, parameters).call
+  end
+
+  def format_collection
+    Collection.new(objects, parameters).call
   end
 
   # ObjectIdentifier::StringFormatter::Collection formats a collection-specific
@@ -122,9 +122,9 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     def attributes_formatter
       @attributes_formatter ||=
         if attributes_hash.one?
-          ->(_key, value) { value.inspect_lit }
+          ->(_key, value) { value.inspect }
         else # attributes_hash.size > 1
-          ->(key, value) { "#{key}:#{value.inspect_lit}" }
+          ->(key, value) { "#{key}:#{value.inspect}" }
         end
     end
 

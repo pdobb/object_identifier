@@ -132,36 +132,6 @@ The number of results that will be identified from a collection can be truncated
 {}.identify  # => [no objects]
 ```
 
-## Custom Object Identifiers
-
-Internally, Object Identifier calls `inspect_lit` to return a "literally-inspected" string representation of an object. This works because Object, itself, is monkey-patched to define `inspect_lit` which just returns `inspect`. This is sufficient for most objects, but some objects will benefit from defining special output from `inspect_lit`.
-
-Object Identifier defines `inspect_lit` on three other core objects: String, Symbol, and BigDecimal.
-
-```ruby
-"a_string".inspect_lit           # => "\"a_string\""
-:a_symbol.inspect_lit            # => ":\"a_symbol\""
-BigDecimal(1.99, 3).inspect_lit  # => "<BD:1.99>"
-```
-
-To identify an object in a special way, just define `inspect_lit` to return a custom String.
-
-```ruby
-class MyValueObject
-  def initialize(val)
-    @val = val
-  end
-
-  def inspect_lit
-    "#{@val} Meters"
-  end
-end
-
-my_value_object = MyValueObject.new(42)
-OpenStruct.new(my_value: my_value_object).identify(:my_value)
-# => "OpenStruct[my_value:42 Meters]"
-```
-
 ## Supporting Gems
 
 Object Identifier works great with the [Object Inspector](https://github.com/pdobb/object_inspector) gem.
