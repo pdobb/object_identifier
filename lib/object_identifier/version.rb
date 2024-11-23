@@ -2,5 +2,5 @@
 
 module ObjectIdentifier
   # The current ObjectIdentifier gem version.
-  VERSION = "0.8.0"
+  VERSION = "0.9.0"
 end
