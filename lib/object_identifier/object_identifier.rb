@@ -12,7 +12,6 @@ module ObjectIdentifier
         *attributes,
         formatter_class: default_formatter_class,
         **formatter_options)
-
     parameters =
       ObjectIdentifier::Parameters.build(
         attributes: attributes,

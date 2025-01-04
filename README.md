@@ -37,11 +37,17 @@ Or install it yourself as:
 
 Tested MRI Ruby Versions:
 
-- 3.1
 - 3.2
 - 3.3
+- 3.4
 
-Note: For Ruby 2.7 or 3.1 support, install object_identifier gem version 0.7.0.
+For Ruby 2.7 support, install object_identifier gem version 0.7.0.
+
+```ruby
+gem "object_identifier", "0.7.0"
+```
+
+For Ruby 3.1 support, install object_identifier gem version 0.9.0.
 
 ```ruby
 gem "object_identifier", "0.7.0"
