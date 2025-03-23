@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "ostruct"
 
 class ObjectIdentifier::StringFormatterTest < Minitest::Spec
   # ObjectIdentifier::StringFormatterTest::TestStruct is a Test Dummy.
   TestStruct = Struct.new(:id)
+
+  IdentifiableTestClass =
+    Struct.new(:id, :name, :attr1, keyword_init: true) do
+      # :reek:UncommunicativeParameterName
+      def initialize(id: nil, name: nil, attr1: nil)
+        super
+      end
+    end
 
   describe "ObjectIdentifier::StringFormatter" do
     let(:unit_class) { ObjectIdentifier::StringFormatter }
@@ -24,28 +31,28 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
 
       context "GIVEN a single object" do
         it "quotes Strings in attributes" do
-          object = OpenStruct.new(name: "TestName")
+          object = IdentifiableTestClass.new(name: "TestName")
           _(subject.call(object, **parameterize(:name))).must_equal(
-            %(OpenStruct["TestName"]))
+            %(#{IdentifiableTestClass}["TestName"]))
         end
 
         it "quotes symbols in attributes" do
-          object = OpenStruct.new(name: "TestName", attr1: :value1)
+          object = IdentifiableTestClass.new(name: "TestName", attr1: :value1)
           _(subject.call(object, **parameterize(:attr1))).must_equal(
-            %(OpenStruct[:value1]))
+            "#{IdentifiableTestClass}[:value1]")
         end
 
         it "ignores attributes that don't exist" do
-          object = OpenStruct.new(name: "TestName", attr1: :value1)
+          object = IdentifiableTestClass.new(name: "TestName", attr1: :value1)
           _(subject.call(object, **parameterize(%i[attr1 unknown_attr1])))
-            .must_equal(%(OpenStruct[:value1]))
+            .must_equal("#{IdentifiableTestClass}[:value1]")
         end
 
         it "returns the value of instance variables" do
-          object = OpenStruct.new
+          object = IdentifiableTestClass.new
           object.instance_variable_set(:@var1, 1)
           _(subject.call(object, **parameterize(:@var1))).must_equal(
-            "OpenStruct[1]")
+            "#{IdentifiableTestClass}[1]")
         end
 
         it "returns '[no objects]', GIVEN object = nil" do
@@ -67,7 +74,7 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
 
         context "GIVEN multiple attribute to identify" do
           it "includes all of the given attribute names/values" do
-            object = OpenStruct.new(name: "TestName", attr1: :value1)
+            object = IdentifiableTestClass.new(name: "TestName", attr1: :value1)
             object.instance_variable_set(:@var1, 1)
 
             result =
@@ -76,13 +83,15 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
 
             expected_attributes_string =
               %(name:"TestName", attr1::value1, @var1:1)
-            _(result).must_equal("OpenStruct[#{expected_attributes_string}]")
+            _(result).must_equal(
+              "#{IdentifiableTestClass}[#{expected_attributes_string}]")
           end
         end
 
         context "GIVEN object responds to :id" do
           it "returns 'Class[<id value>]', GIVEN no other attributes" do
-            _(subject.call(OpenStruct.new(id: 1))).must_equal("OpenStruct[1]")
+            _(subject.call(IdentifiableTestClass.new(id: 1))).must_equal(
+              "#{IdentifiableTestClass}[1]")
           end
         end
 
@@ -93,7 +102,7 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
         end
 
         context "GIVEN a :klass" do
-          let(:object) { OpenStruct.new(id: 1) }
+          let(:object) { IdentifiableTestClass.new(id: 1) }
 
           it "overrides object class name" do
             _(subject.call(object, **parameterize(klass: "MyClass")))
@@ -107,17 +116,18 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
         end
 
         it "ignores :limit" do
-          object = OpenStruct.new(id: 1)
+          object = IdentifiableTestClass.new(id: 1)
           _(subject.call(object, **parameterize(:id, limit: 3)))
-            .must_equal("OpenStruct[1]")
+            .must_equal("#{IdentifiableTestClass}[1]")
         end
       end
 
       context "GIVEN a collection of objects" do
-        let(:object) { [OpenStruct.new(id: 1), Object.new] }
+        let(:object) { [IdentifiableTestClass.new(id: 1), Object.new] }
 
         it "identifies each object in turn" do
-          _(subject.call(object)).must_equal("OpenStruct[1], Object[]")
+          _(subject.call(object)).must_equal(
+            "#{IdentifiableTestClass}[1], Object[]")
         end
 
         it "overrides object class name for all objects, GIVEN a :klass" do

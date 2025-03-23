@@ -20,8 +20,11 @@ class Object
   # @return [String] a self-identifying string
   #
   # @example
-  #   OpenStruct.new(a: 1, b: '2', c: :"3").identify(:a, :b, :c)
-  #   # => "OpenStruct[a:1, b:\"2\", c::\"3\"]"
+  #   Struct.new(:a, :b, :c)[1, "2", :"3"].identify(:a, :b, :c, klass: "Struct")
+  #   => "Struct[a:1, b:\"2\", c::\"3\"]"
+
+  #   Data.define(:a, :b, :c)[1, "2", :"3"].identify(:a, :b, :c, klass: "Data")
+  #   # => "Data[a:1, b:\"2\", c::\"3\"]"
   #
   #   1.identify(:to_s) # => "Integer[to_s:\"1\"]"
   #   nil.identify      # => "[no objects]"

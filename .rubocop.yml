@@ -10,5 +10,6 @@ inherit_gem:
 AllCops:
   TargetRubyVersion: 3.2
 
-Performance/OpenStruct:
-  Enabled: false # Reconsider later.
+Naming/MethodParameterName:
+  AllowedNames:
+    - id
