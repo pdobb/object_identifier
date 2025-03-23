@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+### 0.11.0 - 2025-3-23
+
 - Deprecate the `klass` option in favor of `class`. The former will be removed in v1.0.
 
 ### 0.10.0 - 2025-1-4
