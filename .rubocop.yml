@@ -9,7 +9,3 @@ inherit_gem:
 
 AllCops:
   TargetRubyVersion: 3.2
-
-Naming/MethodParameterName:
-  AllowedNames:
-    - id
