@@ -37,8 +37,8 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
 
         it "ignores attributes that don't exist" do
           object = OpenStruct.new(name: "TestName", attr1: :value1)
-          _(subject.call(object, **parameterize(%i[attr1 unknown_attr1]))).
-            must_equal(%(OpenStruct[:value1]))
+          _(subject.call(object, **parameterize(%i[attr1 unknown_attr1])))
+            .must_equal(%(OpenStruct[:value1]))
         end
 
         it "returns the value of instance variables" do
@@ -96,20 +96,20 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
           let(:object) { OpenStruct.new(id: 1) }
 
           it "overrides object class name" do
-            _(subject.call(object, **parameterize(klass: "MyClass"))).
-              must_equal("MyClass[1]")
+            _(subject.call(object, **parameterize(klass: "MyClass")))
+              .must_equal("MyClass[1]")
           end
 
           it "returns no class name, GIVEN :klass is blank" do
-            _(subject.call(object, **parameterize(klass: [nil, ""].sample))).
-              must_equal("[1]")
+            _(subject.call(object, **parameterize(klass: [nil, ""].sample)))
+              .must_equal("[1]")
           end
         end
 
         it "ignores :limit" do
           object = OpenStruct.new(id: 1)
-          _(subject.call(object, **parameterize(:id, limit: 3))).
-            must_equal("OpenStruct[1]")
+          _(subject.call(object, **parameterize(:id, limit: 3)))
+            .must_equal("OpenStruct[1]")
         end
       end
 
@@ -121,19 +121,19 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
         end
 
         it "overrides object class name for all objects, GIVEN a :klass" do
-          _(subject.call(object, **parameterize(klass: "MyClass"))).
-            must_equal("MyClass[1], MyClass[]")
+          _(subject.call(object, **parameterize(klass: "MyClass")))
+            .must_equal("MyClass[1], MyClass[]")
         end
 
         it "returns no class name, GIVEN :klass is blank" do
-          _(subject.call(object, **parameterize(klass: [nil, ""].sample))).
-            must_equal("[1], []")
+          _(subject.call(object, **parameterize(klass: [nil, ""].sample)))
+            .must_equal("[1], []")
         end
 
         it "returns truncated list, GIVEN :limit" do
           object = "abcdefg".chars
-          _(subject.call(object, **parameterize(:upcase, limit: 3))).
-            must_equal(
+          _(subject.call(object, **parameterize(:upcase, limit: 3)))
+            .must_equal(
               "String[\"A\"], "\
               "String[\"B\"], "\
               "String[\"C\"], ... (4 more)")

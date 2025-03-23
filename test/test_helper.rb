@@ -2,7 +2,7 @@
 
 require "gemwork/test/support/simplecov"
 
-$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+$LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
 require "object_identifier"
 
 require "minitest/autorun"

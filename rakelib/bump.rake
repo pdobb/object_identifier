@@ -48,7 +48,7 @@ def replace_in_file(path, replacements)
   original_file_contents = file_contents.dup
 
   replacements.each do |regex, text|
-    raise "Can't find #{regex} in #{path}" unless regex.match?(file_contents)
+    raise("Can't find #{regex} in #{path}") unless regex.match?(file_contents)
 
     file_contents.gsub!(regex) do |match|
       match[regex, 1] = text

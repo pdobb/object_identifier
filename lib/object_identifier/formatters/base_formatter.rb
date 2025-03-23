@@ -19,6 +19,6 @@ class ObjectIdentifier::BaseFormatter
   end
 
   def call
-    raise NotImplementedError
+    raise(NotImplementedError)
   end
 end

@@ -46,7 +46,7 @@ module ObjectIdentifier
 
     def formatter_class=(value)
       unless value.is_a?(Class)
-        raise TypeError, "Formatter must be a Class constant"
+        raise(TypeError, "Formatter must be a Class constant")
       end
 
       @formatter_class = value
