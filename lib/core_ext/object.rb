@@ -13,17 +13,17 @@ class Object
   #     for this object
   #   @param [Hash] options the options for building a customized
   #     self-identifier
-  #   @option options [String, nil] :klass object class name override
+  #   @option options [String, nil] :class object class name override
   #   @option options [Integer] :limit maximum number of objects to display from
   #     a collection
   #
   # @return [String] a self-identifying string
   #
   # @example
-  #   Struct.new(:a, :b, :c)[1, "2", :"3"].identify(:a, :b, :c, klass: "Struct")
+  #   Struct.new(:a, :b, :c)[1, "2", :"3"].identify(:a, :b, :c, class: "Struct")
   #   => "Struct[a:1, b:\"2\", c::\"3\"]"
 
-  #   Data.define(:a, :b, :c)[1, "2", :"3"].identify(:a, :b, :c, klass: "Data")
+  #   Data.define(:a, :b, :c)[1, "2", :"3"].identify(:a, :b, :c, class: "Data")
   #   # => "Data[a:1, b:\"2\", c::\"3\"]"
   #
   #   1.identify(:to_s) # => "Integer[to_s:\"1\"]"

@@ -101,16 +101,16 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
           end
         end
 
-        context "GIVEN a :klass" do
+        context "GIVEN a :class" do
           let(:object) { IdentifiableTestClass.new(id: 1) }
 
           it "overrides object class name" do
-            _(subject.call(object, **parameterize(klass: "MyClass")))
+            _(subject.call(object, **parameterize(class: "MyClass")))
               .must_equal("MyClass[1]")
           end
 
-          it "returns no class name, GIVEN :klass is blank" do
-            _(subject.call(object, **parameterize(klass: [nil, ""].sample)))
+          it "returns no class name, GIVEN :class is blank" do
+            _(subject.call(object, **parameterize(class: [nil, ""].sample)))
               .must_equal("[1]")
           end
         end
@@ -130,13 +130,13 @@ class ObjectIdentifier::StringFormatterTest < Minitest::Spec
             "#{IdentifiableTestClass}[1], Object[]")
         end
 
-        it "overrides object class name for all objects, GIVEN a :klass" do
-          _(subject.call(object, **parameterize(klass: "MyClass")))
+        it "overrides object class name for all objects, GIVEN a :class" do
+          _(subject.call(object, **parameterize(class: "MyClass")))
             .must_equal("MyClass[1], MyClass[]")
         end
 
-        it "returns no class name, GIVEN :klass is blank" do
-          _(subject.call(object, **parameterize(klass: [nil, ""].sample)))
+        it "returns no class name, GIVEN :class is blank" do
+          _(subject.call(object, **parameterize(class: [nil, ""].sample)))
             .must_equal("[1], []")
         end
 

@@ -16,7 +16,7 @@ class ObjectIdentifierTest < Minitest::Spec
     let(:objects) { ["a", 1, Struct.new(:id), [], {}].sample }
     let(:default_formatter_class) { unit_class::StringFormatter }
     let(:custom_formatter_class) { CustomFormatter }
-    let(:custom_formatter_options) { { limit: 9, klass: "TestClass" } }
+    let(:custom_formatter_options) { { limit: 9, class: "TestClass" } }
     let(:custom_attributes) { %i[id name] }
 
     subject { unit_class }

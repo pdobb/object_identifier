@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Deprecate the `klass` option in favor of `class`. The former will be removed in v1.0.
+
 ### 0.10.0 - 2025-1-4
 
 - Update minimum Ruby version from 3.1 -> 3.2

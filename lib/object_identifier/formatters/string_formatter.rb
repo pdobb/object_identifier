@@ -110,7 +110,7 @@ class ObjectIdentifier::StringFormatter < ObjectIdentifier::BaseFormatter
     end
 
     def class_name
-      parameters.klass { object.class.name }
+      parameters.class { object.class.name }
     end
 
     def formatted_attributes

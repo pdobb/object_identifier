@@ -7,7 +7,6 @@ Object Identifier allows quick, easy, and uniform identification of an object by
 
 Why? Because object identification output should be uniform and easy to build, and its output should be easy to read! Consistency improves readability.
 
-
 For example:
 
 ```ruby
@@ -66,10 +65,10 @@ Object Identifier has no other dependencies.
 
 Global/default values for Object Identifier can be configured via the ObjectIdentifier::Configuration object.
 
-_Note: In a Rails app, the following would go in e.g. `config/initializers/object_identifier.rb`_
-
 ```ruby
-# Default values are shown.
+# config/initializers/object_identifier.rb
+
+# Default values are shown. Customize to your liking.
 ObjectIdentifier.configure do |config|
   config.formatter_class = ObjectIdentifier::StringFormatter
   config.default_attributes = %i[id]
@@ -83,21 +82,35 @@ end
 `identify` outputs the `id` of the receiving object by default, if it exists and no other attributes/methods are specified.
 
 ```ruby
-my_movie.identify                # => Movie[1]
+Movie = Data.define(:id, :name, :rating)
+
+my_movie = Movie[1, "Identifier Gadget", "7/10"]
+
+my_movie.identify          # => "Movie[1]"
 ```
 
 `identify` doesn't output labels if only identifying a single attribute/method. It includes labels when two or more attributes/methods are being identified.
 
 ```ruby
-my_movie.identify(:id)           # => Movie[1]
-my_movie.identify(:rating)       # => Movie["7/10"]
-my_movie.identify(:id, :rating)  # => Movie[id:1, rating:"7/10"]
+my_movie.identify(:id)     # => "Movie[1]"
+my_movie.identify(:name)   # => 'Movie["Identifier Gadget"]'
+my_movie.identify(:rating) # => 'Movie["7/10"]'
+
+my_movie.identify(:id, :name, :rating)
+# => 'Movie[id:1, name: "Identifier Gadget", rating:"7/10"]'
 ```
 
 Private methods can be identified just the same as public methods.
 
 ```ruby
-my_movie.identify(:my_private_method)  # => Movie["Shh"]
+Movie =
+  Data.define(:id, :name, :rating) do
+    private def my_private_method = "Shh"
+  end
+
+my_movie = Movie[1, "Private Identifier", "7/10"]
+
+my_movie.identify(:my_private_method) # => 'Movie["Shh"]'
 ```
 
 ### Unknown Attributes/Methods
@@ -105,21 +118,21 @@ my_movie.identify(:my_private_method)  # => Movie["Shh"]
 If the object doesn't respond to a specified attribute/method it is simply ignored:
 
 ```ruby
-my_movie.identify(:id, :rating, :other)  # => Movie[id:1, rating:"7/10"]
+my_movie.identify(:id, :rating, :unknown)   # => 'Movie[id:1, rating:"7/10"]'
 ```
 
 ### Overriding Class Names
 
 ```ruby
-my_delayed_job.identify(klass: "Delayed::Job")  # => Delayed::Job[1]
-my_movie.identify(klass: nil)                   # => [1]
+my_movie.identify(class: "MyBlockbuster")  # => "MyBlockbuster[1]"
+my_movie.identify(class: nil)              # => "[1]"
 ```
 
 ### Identifying Nil
 
 ```ruby
-nil.identify(:id, :name)                 # => [no objects]
-nil.identify(:id, :name, klass: "Nope")  # => [no objects]
+nil.identify(:id, :name)                   # => "[no objects]"
+nil.identify(:id, :name, class: "Nope")    # => "[no objects]"
 ```
 
 ### Collections
@@ -127,22 +140,25 @@ nil.identify(:id, :name, klass: "Nope")  # => [no objects]
 Collections of objects are each identified in turn.
 
 ```ruby
+User = Data.define(:id, :name)
+my_user = User[2, "Bob"]
+
 [my_movie, my_user].identify(:id, :name)
-# => Movie[id:1, name:"Pi"], User[id:1, name:"Bob"]
+# => 'Movie[id:1, name:"Identifier Gadget"], User[id:2, name:"Bob"]'
 ```
 
 The number of results that will be identified from a collection can be truncated by specifying the `limit` option.
 
 ```ruby
 [my_movie, my_user].identify(:id, :name, limit: 1)
-# => Movie[id:1, name:"Pi"], ... (1 more)
+# => 'Movie[id:1, name:"Identifier Gadget"], ... (1 more)'
 ```
 
 ### Empty Collections
 
 ```ruby
-[].identify  # => [no objects]
-{}.identify  # => [no objects]
+[].identify  # => "[no objects]"
+{}.identify  # => "[no objects]"
 ```
 
 ## Supporting Gems

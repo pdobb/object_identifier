@@ -21,7 +21,7 @@ class ObjectIdentifier::ParametersTest < Minitest::Spec
         it "sets sensible defaults, GIVEN" do
           _(subject.attributes).must_equal([])
           _(subject.limit).must_be_nil
-          _(subject.klass).must_be_nil
+          _(subject.class).must_be_nil
         end
       end
 
@@ -29,7 +29,7 @@ class ObjectIdentifier::ParametersTest < Minitest::Spec
         let(:formatter_options) {
           {
             limit: 9,
-            klass: CustomFormatter,
+            class: CustomFormatter,
             unknown_key: "THIS KEY SHOULD BE IGNORED",
           }
         }
@@ -44,7 +44,7 @@ class ObjectIdentifier::ParametersTest < Minitest::Spec
            "ignoring unknown keys" do
           _(subject.attributes).must_equal(custom_attributes)
           _(subject.limit).must_equal(formatter_options.fetch(:limit))
-          _(subject.klass).must_equal(formatter_options.fetch(:klass).to_s)
+          _(subject.class).must_equal(formatter_options.fetch(:class).to_s)
         end
       end
     end
@@ -65,33 +65,33 @@ class ObjectIdentifier::ParametersTest < Minitest::Spec
       end
     end
 
-    describe "#klass" do
-      let(:klass) { [target_class, target_class.to_s].sample }
+    describe "#class" do
+      let(:class1) { [target_class, target_class.to_s].sample }
       let(:target_class) { CustomFormatter }
 
       context "GIVEN a constant or a String was set on initialization" do
-        subject { unit_class.new(formatter_options: { klass: klass }) }
+        subject { unit_class.new(formatter_options: { class: class1 }) }
 
         it "returns the given value as a String" do
-          _(subject.klass).must_equal(target_class.to_s)
+          _(subject.class).must_equal(target_class.to_s)
         end
       end
 
-      context "GIVEN no klass was set on initialization" do
+      context "GIVEN no class was set on initialization" do
         subject { unit_class.new }
 
         it "returns nil" do
-          _(subject.klass).must_be_nil
+          _(subject.class).must_be_nil
         end
 
         context "GIVEN a block" do
           it "returns the result of the block" do
-            _(subject.klass { target_class }).must_equal(target_class.to_s)
+            _(subject.class { target_class }).must_equal(target_class.to_s)
           end
 
           context "GIVEN a constant or a String result from the block" do
             it "returns the given value as a String" do
-              _(subject.klass { klass }).must_equal(target_class.to_s)
+              _(subject.class { class1 }).must_equal(target_class.to_s)
             end
           end
         end

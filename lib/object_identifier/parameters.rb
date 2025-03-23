@@ -4,8 +4,8 @@
 # formatter options that may be needed for custom formatting during object
 # identification.
 class ObjectIdentifier::Parameters
-  # This String to display if `formatter_options[:klass]` isn't present.
-  KLASS_NOT_GIVEN = "NOT_GIVEN"
+  # This String to display if `formatter_options[:class]` isn't present.
+  CLASS_NOT_GIVEN = "NOT_GIVEN"
 
   attr_reader :attributes
 
@@ -26,14 +26,26 @@ class ObjectIdentifier::Parameters
   #   given object(s) with.
   # @option formatter_options[:limit] [Integer, nil] A given limit on the number
   #   of objects to interrogate.
-  # @option formatter_options[:klass] [#to_s] A preferred type name for
+  # @option formatter_options[:class] [#to_s] A preferred type name for
   #   identifying the given object(s) as.
-  def initialize(
+  def initialize( # rubocop:disable Metrics/MethodLength
         attributes: [],
         formatter_options: {})
     @attributes = attributes
     @limit = formatter_options.fetch(:limit, nil)
-    @klass = formatter_options.fetch(:klass, KLASS_NOT_GIVEN)
+    @class =
+      formatter_options.fetch(:class) {
+        # For backwards compatibility with earlier versions of this gem.
+        if formatter_options.key?(:klass)
+          warn(
+            "DEPRECATION WARNING: "\
+            "The `klass` option is deprecated and will be removed in v1.0. "\
+            "Use `class` instead.")
+          formatter_options[:klass]
+        else
+          CLASS_NOT_GIVEN
+        end
+      }
   end
 
   # NOTE: Expects a block if a value wasn't supplied on initialization.
@@ -42,9 +54,9 @@ class ObjectIdentifier::Parameters
   end
 
   # NOTE: Expects a block if a value wasn't supplied on initialization.
-  def klass
-    if klass_given?
-      @klass.to_s
+  def class
+    if class_given?
+      @class.to_s
     elsif block_given?
       yield.to_s
     else
@@ -54,7 +66,7 @@ class ObjectIdentifier::Parameters
 
   private
 
-  def klass_given?
-    @klass != KLASS_NOT_GIVEN
+  def class_given?
+    @class != CLASS_NOT_GIVEN
   end
 end

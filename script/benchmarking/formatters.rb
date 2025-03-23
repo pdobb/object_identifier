@@ -35,10 +35,10 @@ Benchmark.ips do |x|
     x.report(formatter_class) do
       formatter_class.new(objects[0]).call
       formatter_class.new(objects[0], parameters: parameterize(%i[id name])).call
-      formatter_class.new(objects[0], parameters: parameterize(klass: "CustomClass")).call
-      formatter_class.new(objects[0], parameters: parameterize(%i[id name], klass: "CustomClass")).call
+      formatter_class.new(objects[0], parameters: parameterize(class: "CustomClass")).call
+      formatter_class.new(objects[0], parameters: parameterize(%i[id name], class: "CustomClass")).call
       formatter_class.new(objects, parameters: parameterize(limit: 2)).call
-      formatter_class.new(objects, parameters: parameterize(%i[id name], klass: "CustomClass", limit: 2)).call
+      formatter_class.new(objects, parameters: parameterize(%i[id name], class: "CustomClass", limit: 2)).call
     end
   end
 
@@ -67,7 +67,7 @@ Benchmark.ips do |x|
     x.report("#{formatter_class} - Custom Class") do
       formatter_class.new(
         objects[0],
-        parameters: parameterize(klass: "CustomClass")).
+        parameters: parameterize(class: "CustomClass")).
         call
     end
   end
@@ -75,7 +75,7 @@ Benchmark.ips do |x|
     x.report("#{formatter_class} - Custom Attributes & Custom Class") do
       formatter_class.new(
         objects[0],
-        parameters: parameterize(%i[id name], klass: "CustomClass")).
+        parameters: parameterize(%i[id name], class: "CustomClass")).
         call
     end
   end
@@ -91,7 +91,7 @@ Benchmark.ips do |x|
     x.report("#{formatter_class} - Custom Attributes & Custom Class & Limit 2") do
       formatter_class.new(
         objects,
-        parameters: parameterize(%i[id name], klass: "CustomClass", limit: 2)).
+        parameters: parameterize(%i[id name], class: "CustomClass", limit: 2)).
         call
     end
   end
