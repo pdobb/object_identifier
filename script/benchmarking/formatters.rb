@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-# Play from the IRB console with:
+# Run from the IRB console with:
 #   load "script/benchmarking/formatters.rb"
 
 require "benchmark/ips"
 
-custom_formatter_klasses ||= []
+CUSTOM_FORMATTER_CLASSES ||= []
 
-formatter_klasses = [
+formatter_classes = [
   ObjectIdentifier::StringFormatter,
-  *Array(custom_formatter_klasses),
+  *Array(CUSTOM_FORMATTER_CLASSES),
 ].freeze
 
 MyObject = Struct.new(:id, :name)
@@ -26,68 +26,70 @@ def parameterize(attributes = [], **formatter_options)
     formatter_options: formatter_options)
 end
 
-puts "== Averaged ===================================================================="
+def ruby_version = @ruby_version ||= `ruby -v | awk '{ print $2 }'`.strip
+puts("Reporting for: Ruby v#{ruby_version}\n\n")
+
+puts("== Averaged ============================================================")
 Benchmark.ips do |x|
-  formatter_klasses.each do |formatter_klass|
-    x.report(formatter_klass) do
-      formatter_klass.new(objects[0]).call
-      formatter_klass.new(objects[0], parameters: parameterize(%i[id name])).call
-      formatter_klass.new(objects[0], parameters: parameterize(klass: "CustomClass")).call
-      formatter_klass.new(objects[0], parameters: parameterize(%i[id name], klass: "CustomClass")).call
-      formatter_klass.new(objects, parameters: parameterize(limit: 2)).call
-      formatter_klass.new(objects, parameters: parameterize(%i[id name], klass: "CustomClass", limit: 2)).call
+  formatter_classes.each do |formatter_class|
+    x.report(formatter_class) do
+      formatter_class.new(objects[0]).call
+      formatter_class.new(objects[0], parameters: parameterize(%i[id name])).call
+      formatter_class.new(objects[0], parameters: parameterize(klass: "CustomClass")).call
+      formatter_class.new(objects[0], parameters: parameterize(%i[id name], klass: "CustomClass")).call
+      formatter_class.new(objects, parameters: parameterize(limit: 2)).call
+      formatter_class.new(objects, parameters: parameterize(%i[id name], klass: "CustomClass", limit: 2)).call
     end
   end
 
   x.compare!
 end
-puts(
-  "== Done ========================================================================",
-  "\n")
+puts("== Done ================================================================")
+puts("\n")
 
-puts "== Individualized =============================================================="
+puts("== Individualized ======================================================")
 Benchmark.ips do |x|
   # rubocop:disable Style/CombinableLoops
-  formatter_klasses.each do |formatter_klass|
-    x.report("#{formatter_klass} - Default Attributes") do
-      formatter_klass.new(objects[0]).call
+  formatter_classes.each do |formatter_class|
+    x.report("#{formatter_class} - Default Attributes") do
+      formatter_class.new(objects[0]).call
     end
   end
-  formatter_klasses.each do |formatter_klass|
-    x.report("#{formatter_klass} - Custom Attributes") do
-      formatter_klass.new(
+  formatter_classes.each do |formatter_class|
+    x.report("#{formatter_class} - Custom Attributes") do
+      formatter_class.new(
         objects[0],
         parameters: parameterize(%i[id name])).
         call
     end
   end
-  formatter_klasses.each do |formatter_klass|
-    x.report("#{formatter_klass} - Custom Class") do
-      formatter_klass.new(
+  formatter_classes.each do |formatter_class|
+    x.report("#{formatter_class} - Custom Class") do
+      formatter_class.new(
         objects[0],
         parameters: parameterize(klass: "CustomClass")).
         call
     end
   end
-  formatter_klasses.each do |formatter_klass|
-    x.report("#{formatter_klass} - Custom Attributes & Custom Class") do
-      formatter_klass.new(
+  formatter_classes.each do |formatter_class|
+    x.report("#{formatter_class} - Custom Attributes & Custom Class") do
+      formatter_class.new(
         objects[0],
         parameters: parameterize(%i[id name], klass: "CustomClass")).
         call
     end
   end
-  formatter_klasses.each do |formatter_klass|
-    x.report("#{formatter_klass} - Limit 2") do
-      formatter_klass.new(
+  formatter_classes.each do |formatter_class|
+    x.report("#{formatter_class} - Limit 2") do
+      formatter_class.new(
         objects,
         parameters: parameterize(limit: 2)).
         call
     end
   end
-  formatter_klasses.each do |formatter_klass|
-    x.report("#{formatter_klass} - Custom Attributes & Custom Class & Limit 2") do
-      formatter_klass.new(
+  formatter_classes.each do |formatter_class|
+    x.report("#{formatter_class} - Custom Attributes & Custom Class & Limit 2") do
+      formatter_class.new(
         objects,
         parameters: parameterize(%i[id name], klass: "CustomClass", limit: 2)).
         call
@@ -97,6 +99,5 @@ Benchmark.ips do |x|
 
   x.compare!
 end
-puts(
-  "== Done ========================================================================",
-  "\n")
+puts("== Done ================================================================")
+puts("\n")

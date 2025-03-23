@@ -5,6 +5,9 @@
 
 Object Identifier allows quick, easy, and uniform identification of an object by inspecting its class name and outputting any desirable attributes/methods. It is great for logging, sending descriptive notification messages, etc.
 
+Why? Because object identification output should be uniform and easy to build, and its output should be easy to read! Consistency improves readability.
+
+
 For example:
 
 ```ruby
@@ -27,11 +30,15 @@ gem "object_identifier"
 
 And then execute:
 
-    $ bundle
+```sh
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install object_identifier
+```sh
+$ gem install object_identifier
+```
 
 ## Compatibility
 
@@ -50,7 +57,7 @@ gem "object_identifier", "0.7.0"
 For Ruby 3.1 support, install object_identifier gem version 0.9.0.
 
 ```ruby
-gem "object_identifier", "0.7.0"
+gem "object_identifier", "0.9.0"
 ```
 
 Object Identifier has no other dependencies.
@@ -146,16 +153,21 @@ Object Identifier works great with the [Object Inspector](https://github.com/pdo
 
 Performance of Formatters can be tested by playing the [Formatters Benchmarking Scripts](https://github.com/pdobb/object_identifier/blob/master/script/benchmarking/formatters.rb) in the IRB console for this gem.
 
-Custom Formatters may be similarly gauged for comparison by adding them to the `custom_formatter_klasses` array before playing (loading) the script.
+Custom Formatters may be similarly gauged for comparison by putting them into constant array `CUSTOM_FORMATTER_CLASSES` before loading the script in the IRB console for this gem.
 
 ```ruby
-custom_formatter_klasses = [MyCustomFormatter]
+CUSTOM_FORMATTER_CLASSES = [MyCustomFormatter]
 
 load "script/benchmarking/formatters.rb"
+# Reporting for: Ruby v3.4.2
+
+# == Averaged ============================================================
+# ...
+#
 # ObjectIdentifier::StringFormatter
-#     58.478k (± 0.8%) i/s -    295.776k in   5.058178s
+#     38.646k (± 1.3%) i/s   (25.88 μs/i) -    196.758k in   5.092094s
 # MyCustomFormatter
-#                          ...
+#     ...
 ```
 
 ## Development
